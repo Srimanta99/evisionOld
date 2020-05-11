@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/footer_home_icon"
+        android:title="@string/botto_nav_home"
+        android:enabled="true"/>
+    <item
+        android:id="@+id/navigation_cart"
+        android:icon="@drawable/footer_cart_icon"
+        android:title="@string/botto_nav_cart"
+        android:enabled="true"/>
+    <item
+        android:id="@+id/navigation_stock"
+        android:icon="@drawable/footer_stock_icon"
+        android:title="@string/botto_nav_productinstock"
+        android:enabled="true"/>
+    <item
+        android:id="@+id/navigation_myaccount"
+        android:icon="@drawable/footer_myaccount_icon"
+        android:title="@string/menu_accountdetails"
+        android:enabled="true"/>
+    <item
+        android:id="@+id/navigation_cantactus"
+        android:icon="@drawable/footer_contact_icon"
+        android:title="@string/contact_us"
+        android:enabled="true"/>
+</menu>
