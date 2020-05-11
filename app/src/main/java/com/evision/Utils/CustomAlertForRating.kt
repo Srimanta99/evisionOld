@@ -38,7 +38,7 @@ class CustomAlertForRating(context: Context,val  pid: String, val user: LoginRes
             if (ratingbar.rating>0 && !til_writecommant.text.toString().equals("") )
             callApiforsubmitreviewrating(ratingbar.rating,til_writecommant.text.toString())
             else
-                Toast.makeText(context," Solicitud de cotización y califica esto",Toast.LENGTH_LONG).show()
+                Toast.makeText(context," Debe llenar todos los campos?",Toast.LENGTH_LONG).show()
 
         }
         imagecross.setOnClickListener {
