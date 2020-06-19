@@ -50,8 +50,10 @@ import android.view.ViewGroup.LayoutParams.FILL_PARENT
 
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.view.WindowManager
 import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 
 
 class CheckOutAddress : AppCompatActivity(), GoogleMap.OnMarkerClickListener {
@@ -63,8 +65,8 @@ class CheckOutAddress : AppCompatActivity(), GoogleMap.OnMarkerClickListener {
     private var STATEID: String? = ""
     private var STATEID2: String? = ""
     private var CITYID: String? = ""
-    private var COUNTRYID:String?=""
-    private var COUNTRYID2:String?="169"
+    private var COUNTRYID:String?="1"
+    private var COUNTRYID2:String?="1"
     private var CITYID2: String? = ""
     lateinit var loader: AppDialog
     lateinit var customerAddress: CustomerAddress
@@ -89,6 +91,9 @@ class CheckOutAddress : AppCompatActivity(), GoogleMap.OnMarkerClickListener {
         Ccp.registerPhoneNumberTextView(EDX_phone)
         Ccp2.registerPhoneNumberTextView(EDX_telephone)
 
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
        // val JSAndroidBindingClass = JavaScriptInterface1()
        // web_map.addJavascriptInterface(JSAndroidBindingClass, "locater")
 
@@ -219,7 +224,7 @@ class CheckOutAddress : AppCompatActivity(), GoogleMap.OnMarkerClickListener {
 */
                     TXT_STATE.setOnClickListener {
                         val params = HashMap<String, Any>()
-                        params.put("country_id", 169)
+                        params.put("country_id", COUNTRYID!!)
 
                         onHTTP().POSTCALL(URL.GETSTATES, params, object : OnHttpResponse {
                             override fun onSuccess(response: String) {
@@ -364,7 +369,7 @@ class CheckOutAddress : AppCompatActivity(), GoogleMap.OnMarkerClickListener {
                             TXT_STATE2.setText(state.state_name)
                             STATEID2 = state.state_id
                             TXT_CITY2.setText("")
-                            TXT_CITY2.setHint(resources.getString(R.string.selectcity))
+                            TXT_CITY2.setHint(resources.getString(R.string.selectstate))
                             CITYID2 = ""
                             slectStateFragment.dialog!!.dismiss()
                         }
@@ -418,7 +423,42 @@ class CheckOutAddress : AppCompatActivity(), GoogleMap.OnMarkerClickListener {
             })
 
         }
+        TXT_COUNTRY.setOnClickListener {
+            onHTTP().POSTCALL(URL.GETCOUNTRY, params, object : OnHttpResponse {
+                override fun onSuccess(response: String) {
+                    loader.dismiss()
+                    /* val selectCountry=CountryFragment.newInstance("[\n" +
+                             "  {\n" +
+                             "    \"id\":\"169\",\n" +
+                             "    \"name\":\"Panama\"\n" +
+                             "   }\n" +
+                             "]","")*/
+                    val selectCountry=CountryFragment.newInstance(response,"")
+                    selectCountry.INIT(object:CountryFragment.OnSate{
+                        override fun onChosee(country: COUNTRY) {
+                            TXT_COUNTRY.setText(country.country_name)
+                            TXT_STATE.setText("")
+                            TXT_CITY.setText("")
+                            // TXT_STATE2.setHint(resources.getString(R.string.choosestate))
+                            // TXT_CITY2.setHint(resources.getString(R.string.choosecity))
+                            COUNTRYID=country.country_id
+                            STATEID = ""
+                            CITYID = ""
+                            selectCountry.dialog!!.dismiss()
+                        }
+                    })
+                    selectCountry!!.show(supportFragmentManager, "")
+                }
+                override fun onStart() {
+                    loader.show()
+                }
 
+                override fun onError(error: String) {
+                    loader.dismiss()
+                }
+            })
+
+        }
 
         BTN_NEXT.setOnClickListener {
            /* if (EDX_Address.text.trim().isNullOrEmpty()) {

@@ -3,6 +3,7 @@ package com.evision.CartManage
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.WindowManager
 import android.widget.RadioButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -17,12 +18,14 @@ import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_delivery_method.*
 import org.json.JSONArray
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat
 
 class DeliveryMethodActivity : AppCompatActivity() {
     lateinit var loader: AppDialog
     var SlectDeiliveryID = ""
     var SelectDeliveryType = ""
     var is_same = false
+    var delivery_cost=""
     lateinit var customerAddress: CustomerAddress
     lateinit var customerAddress_billing: CustomerAddressBilling
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,6 +33,10 @@ class DeliveryMethodActivity : AppCompatActivity() {
         setContentView(R.layout.activity_delivery_method)
         var toolbar:Toolbar=findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
+
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
 
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_white_back)
@@ -50,6 +57,10 @@ class DeliveryMethodActivity : AppCompatActivity() {
                             val params = HashMap<String, Any>()
                             params.put("customer_id", ShareData(this@DeliveryMethodActivity).getUser()!!.customerId)
                             params.put("delivery_type", data)
+                            params.put("country_id",customerAddress_billing.country_id)
+                            params.put("state_id",customerAddress_billing.state_id)
+                            params.put("city_id",customerAddress_billing.city_id)
+
                             onHTTP().POSTCALL(URL.GETDELIVERY, params, object : OnHttpResponse {
                                 override fun onSuccess(response: String) {
                                     EvisionLog.D("## RESPONSE-", response)
@@ -60,7 +71,8 @@ class DeliveryMethodActivity : AppCompatActivity() {
                                         val rbtn = RadioButton(this@DeliveryMethodActivity)
                                         rbtn.setText(rb.pickup_store_name)
                                         rbtn.id = rb.pickup_store_id.toInt()
-                                        rbtn.setTag(rb.pickup_store_id)
+                                        rbtn.setTag(R.id.zone,rb.pickup_store_id)
+                                        rbtn.setTag(R.id.dprice,"0")
                                         RGtest.addView(rbtn)
                                     }
                                     loader.dismiss()
@@ -84,6 +96,10 @@ class DeliveryMethodActivity : AppCompatActivity() {
                             val params = HashMap<String, Any>()
                             params.put("customer_id", ShareData(this@DeliveryMethodActivity).getUser()!!.customerId)
                             params.put("delivery_type", data)
+                            params.put("country_id",customerAddress_billing.country_id)
+                            params.put("state_id",customerAddress_billing.state_id)
+                            params.put("city_id",customerAddress_billing.city_id)
+
                             onHTTP().POSTCALL(URL.GETDELIVERY, params, object : OnHttpResponse {
                                 override fun onSuccess(response: String) {
                                     EvisionLog.D("## Delivery-", response)
@@ -92,9 +108,11 @@ class DeliveryMethodActivity : AppCompatActivity() {
                                     for (i in 0..(arra.length() - 1)) {
                                         val rb = Gson().fromJson(arra.optString(i), DeliveryData::class.java)
                                         val rbtn = RadioButton(this@DeliveryMethodActivity)
-                                        rbtn.setText(" ${rb.zone_id} (${rb.zone_city}) Delivery Cost: ${rb.delivery_cost}")
+                                      //  rbtn.setText(" ${rb.zone_id} ${rb.zone_city} Delivery Cost: ${rb.delivery_cost}")
+                                        rbtn.setText("  Delivery Cost: ${rb.delivery_cost}")
                                         rbtn.id = i
-                                        rbtn.setTag(rb.zone_id)
+                                        rbtn.setTag(R.id.zone,rb.zone_id)
+                                        rbtn.setTag(R.id.dprice,rb.delivery_cost)
                                         RGtest.addView(rbtn)
                                     }
                                     loader.dismiss()
@@ -119,8 +137,9 @@ class DeliveryMethodActivity : AppCompatActivity() {
 
         RGtest.setOnCheckedChangeListener { group, checkedId ->
             val btn = findViewById<RadioButton>(checkedId)
-            EvisionLog.D("## TEST3- ", btn.tag.toString())
-            SlectDeiliveryID = btn.tag.toString()
+            EvisionLog.D("## TEST3- ", btn.getTag(R.id.zone).toString())
+            SlectDeiliveryID = btn.getTag(R.id.zone).toString()
+            delivery_cost=btn.getTag(R.id.dprice).toString()
         }
 
 
@@ -134,6 +153,7 @@ class DeliveryMethodActivity : AppCompatActivity() {
             intent.putExtra("delivery_sub_type", SlectDeiliveryID)
                     .putExtra("is_same", is_same)
                     .putExtra("shipping", customerAddress)
+                   .putExtra("delivery_cost",delivery_cost)
                     .putExtra("billing", customerAddress_billing)
             startActivity(intent)
         }

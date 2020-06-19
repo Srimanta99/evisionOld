@@ -2,6 +2,7 @@ package com.evision.ProductList
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
@@ -11,6 +12,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.WindowManager
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -30,14 +32,17 @@ import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
 import org.json.JSONObject
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.evision.mainpage.MainActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class ProductListActivity : AppCompatActivity(), ManufacturerFilter {
 
 
     lateinit var menuCartItem: MenuItem
+    lateinit var  nav_signout:MenuItem
     lateinit var adapter: AdapterProduct
     lateinit var loader: AppDialog
     var cat_id: String? = ""
@@ -52,6 +57,9 @@ class ProductListActivity : AppCompatActivity(), ManufacturerFilter {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_product_list)
         var toolbar:Toolbar=findViewById(R.id.toolbar)
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
         setSupportActionBar(toolbar)
         loader = AppDialog(this)
         toolbar.setTitle("Category Name")
@@ -276,21 +284,33 @@ class ProductListActivity : AppCompatActivity(), ManufacturerFilter {
         val drawable = BitmapDrawable(resources, Converter.getBitmapFromView(inflatedFrame))
         menuCartItem.setIcon(drawable)
         isReadyforCourtCount = true
-    }
+       // if (ShareData(this).getUser() != null)
+        //    nav_signout!!.setVisible(false)
+        }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.main, menu)
         menuCartItem = menu.findItem(R.id.action_cart)
-        if (ShareData(this).getUser() != null)
+        nav_signout=menu.findItem(R.id.nav_signout)
+      //  nav_signout.setVisible(false)
+        if (ShareData(this).getUser() != null ) {
             ManageCartView()
+        }else
+            nav_signout!!.setVisible(false)
+
         return true
     }
 
     override fun onResume() {
         super.onResume()
-        if (ShareData(this).getUser() != null && isReadyforCourtCount)
+        if (ShareData(this).getUser() != null && isReadyforCourtCount ) {
             ManageCartView()
+            nav_signout!!.setVisible(true)
+        }
+      //  else
+         //   nav_signout!!.setVisible(false)
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -298,7 +318,7 @@ class ProductListActivity : AppCompatActivity(), ManufacturerFilter {
             android.R.id.home -> {
                 finish()
             }
-            R.id.action_call -> {
+            /*R.id.action_call -> {
 
                 Dexter.withActivity(this)
                         .withPermission(Manifest.permission.CALL_PHONE)
@@ -329,10 +349,16 @@ class ProductListActivity : AppCompatActivity(), ManufacturerFilter {
                     Toast.makeText(this, "Please make whatsapp to +507-6444-7679", Toast.LENGTH_SHORT).show()
                 }
                 return true
-            }
+            }*/
             R.id.action_cart -> {
                 startActivity(Intent(this, CartActivity::class.java))
                 return true
+            }
+            R.id.nav_signout -> {
+                ShareData(this).Logout()
+                startActivity(Intent(this, MainActivity::class.java))
+                finish()
+                return  true
             }
         }
         return super.onOptionsItemSelected(item)
@@ -426,4 +452,14 @@ class ProductListActivity : AppCompatActivity(), ManufacturerFilter {
 
         })
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 11 && resultCode == Activity.RESULT_OK) {
+            MainActivity.isReadyforCourtCount=true
+            ManageCartView()
+        }
+
+    }
+
 }

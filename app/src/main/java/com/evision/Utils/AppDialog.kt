@@ -16,6 +16,6 @@ class AppDialog(mContext: Context): Dialog(mContext, R.style.loader_them) {
         setContentView(R.layout.loader)
         val imag=findViewById<ImageView>(R.id.IMG_loader)
         Glide.with(mContext).load(R.drawable.loading).into(imag)
-       setCanceledOnTouchOutside(false)
+         setCanceledOnTouchOutside(false)
     }
 }

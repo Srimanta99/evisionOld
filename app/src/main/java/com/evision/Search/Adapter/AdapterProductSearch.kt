@@ -2,6 +2,8 @@ package com.evision.Search.Adapter
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Paint
+import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +22,7 @@ import com.google.gson.Gson
 import org.json.JSONObject
 import android.text.method.TextKeyListener.clear
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.activity_product_details.*
 
 
 class AdapterProductSearch(mContext: Context, list: List<Product>) : RecyclerView.Adapter<AdapterProductSearch.VHolder>() {
@@ -34,6 +37,7 @@ class AdapterProductSearch(mContext: Context, list: List<Product>) : RecyclerVie
         val TXT_name = itemView.findViewById<TextView>(R.id.TXT_name)
         val TXT_Price = itemView.findViewById<TextView>(R.id.TXT_Price)
         val TXT_DESCRIPTION = itemView.findViewById<TextView>(R.id.TXT_DESCRIPTION)
+        val SPECIAL_Price=itemView.findViewById<TextView>(R.id.SPECIAL_Price)
 //        val TXT_Add_cart = itemView.findViewById<TextView>(R.id.TXT_Add_cart)
     }
 
@@ -63,7 +67,19 @@ class AdapterProductSearch(mContext: Context, list: List<Product>) : RecyclerVie
         val item = Listp.get(p1)
         Glide.with(mContext).load(item.productImage).into(p0.IMG_item)
         p0.TXT_name.setText(item.productName)
+
+
         p0.TXT_Price.setText(item.currency + " " + item.price)
+        val spclprice = item.specialPrice.toDouble()
+        if (spclprice > 0.0) {
+
+            val newprice = "<b>" + item.currency + item.price + "</b>"
+            p0.SPECIAL_Price.setText(Html.fromHtml(newprice))
+            p0.TXT_Price.setText(item.currency + " " + item.specialPrice)
+            p0.SPECIAL_Price.paintFlags = p0.TXT_Price.getPaintFlags() or Paint.STRIKE_THRU_TEXT_FLAG
+        }
+
+
         p0.TXT_DESCRIPTION.setText(item.short_description)
         Glide.with(mContext).load(item.productImage).apply(RequestOptions().centerCrop()).into(p0.IMG_item)
         p0.itemView.setOnClickListener {
@@ -79,6 +95,8 @@ class AdapterProductSearch(mContext: Context, list: List<Product>) : RecyclerVie
             p0.IMG_avilable.visibility = View.INVISIBLE
 //            p0.TXT_Add_cart.isClickable = false
         }
+        if(item.price.equals("0.00"))
+           p0.TXT_Price.visibility=View.INVISIBLE
         /*
              p0.TXT_Add_cart.setOnClickListener {
 

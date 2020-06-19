@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.text.Html
 import android.text.method.LinkMovementMethod
 import android.view.MenuItem
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.evision.R
@@ -16,6 +17,7 @@ import kotlinx.android.synthetic.main.activity_contact_us.*
 import kotlinx.android.synthetic.main.content_contact_us.*
 import org.json.JSONObject
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat
 
 class ContactUsActivity : AppCompatActivity() {
     lateinit var loader: AppDialog
@@ -23,10 +25,13 @@ class ContactUsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_contact_us)
         var toolbar:Toolbar=findViewById(R.id.toolbar)
-        toolbar.setTitle(R.string.contact_us)
+        toolbar.setTitle(R.string.menu_contactinfo)
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_white_back)
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
         loader = AppDialog(this)
 
         fbshare.setClickable(true);

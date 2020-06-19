@@ -531,9 +531,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
-            android:backgroundTint="@color/colorPrimary"
+            android:background="@drawable/blue_button_rounded_corner"
             android:drawableRight="@drawable/ic_right_arrow_white"
             android:drawablePadding="5dp"
+            android:padding="@dimen/_5sdp"
             android:gravity="center_vertical"
             android:text="@string/next"
             android:textColor="@color/white" />

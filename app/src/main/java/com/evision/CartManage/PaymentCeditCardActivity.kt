@@ -3,6 +3,8 @@ package com.evision.CartManage
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 
 import android.webkit.WebView
@@ -13,6 +15,9 @@ import com.evision.Utils.EvisionLog
 import com.evision.Utils.URL
 import com.evision.mainpage.MainActivity
 import kotlinx.android.synthetic.main.activity_payment_cedit_card.*
+import android.webkit.WebChromeClient
+
+
 
 
 class PaymentCeditCardActivity : AppCompatActivity() {
@@ -33,6 +38,9 @@ class PaymentCeditCardActivity : AppCompatActivity() {
         WEBV.getSettings().setUseWideViewPort(true)
         WEBV.getSettings().setBuiltInZoomControls(true)
         WEBV.getSettings().setJavaScriptEnabled(true)
+        WEBV.getSettings().setAllowUniversalAccessFromFileURLs(true);
+        WEBV.getSettings().setDomStorageEnabled(true);
+        WEBV.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
         WEBV.addJavascriptInterface(JavaScriptInterface(this), "HtmlViewer")
 
         WEBV.setWebViewClient(WebViewClient())
@@ -51,8 +59,14 @@ class PaymentCeditCardActivity : AppCompatActivity() {
                     inte.putExtra("data", url)
                     startActivity(inte)
                     finish()
-                } else
+                } else {
                     WEBV.loadUrl(url)
+                   // var intent1: Intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                   // startActivity(intent1)
+
+                    //
+                    //
+                }
                 return false
 //                if(Uri.parse(url).host=="www.example.com")
 //                {
@@ -65,7 +79,7 @@ class PaymentCeditCardActivity : AppCompatActivity() {
 
             }
         }
-
+        WEBV.setWebChromeClient(WebChromeClient())
         WEBV.loadUrl(url)
 
     }

@@ -7,12 +7,14 @@ import android.os.Bundle
 
 import android.view.MenuItem
 import android.view.View
+import android.view.WindowManager
 
 import androidx.appcompat.app.AppCompatActivity
 import com.evision.R
 import com.evision.mainpage.MainActivity
 import kotlinx.android.synthetic.main.activity_my_acc.*
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -34,6 +36,9 @@ class MyAccActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_acc)
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
         var toolbar:Toolbar=findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
         toolbar.setTitle(R.string.menu_accountdetails)

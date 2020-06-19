@@ -9,6 +9,7 @@
         android:padding="@dimen/_5sdp"
         android:textSize="@dimen/_10sdp"
         android:gravity="center_horizontal"
+        android:visibility="gone"
         android:layout_height="wrap_content"></TextView>
     <ImageView
         android:id="@+id/img_homebrand"
@@ -18,7 +19,7 @@
         android:layout_marginBottom="@dimen/_20sdp"
         android:layout_gravity="center_horizontal"
 
-        android:layout_height="@dimen/_130sdp">
+        android:layout_height="@dimen/_110sdp">
 
     </ImageView>
 

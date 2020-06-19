@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/white"
+    android:theme="@style/StatusBarColor"
     tools:context=".Search.SearchFragment">
     <RelativeLayout
         android:id="@+id/appbar"
@@ -40,15 +41,16 @@
     <LinearLayout
         android:id="@+id/lltop"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_below="@+id/appbar"
+        android:background="@color/colorPrimary"
         android:orientation="vertical">
 
-    <androidx.cardview.widget.CardView
+   <!-- <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="@dimen/_40sdp"
         android:layout_gravity="top"
-        app:cardBackgroundColor="@color/blackhint">
+        app:cardBackgroundColor="@color/colorPrimary">-->
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -57,12 +59,15 @@
             <EditText
                 android:id="@+id/EDX_key"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="40dp"
                 android:layout_toLeftOf="@+id/IMG_SEARCH"
                 android:background="@drawable/bg_white_roundcorner"
                 android:layout_margin="@dimen/_4sdp"
-                android:padding="@dimen/_5sdp"
+                android:padding="@dimen/_7sdp"
+                android:textSize="@dimen/_12sdp"
                 android:hint="@string/enterkeyword"
+                android:drawablePadding="@dimen/_3sdp"
+                android:drawableRight="@drawable/ic_search_gray"
                 android:imeOptions="actionSearch"
                 android:singleLine="true" />
 
@@ -72,11 +77,12 @@
                 android:layout_height="54dp"
                 android:layout_alignParentRight="true"
                 android:scaleType="centerInside"
-                android:src="@drawable/ic_search_black_24dp" />
+                android:visibility="gone"
+                android:src="@drawable/ic_search_gray" />
 
         </RelativeLayout>
 
-    </androidx.cardview.widget.CardView>
+<!--    </androidx.cardview.widget.CardView>-->
     </LinearLayout>
     <TextView
         android:id="@+id/TXT_EMTY"
@@ -116,17 +122,16 @@
         android:layout_height="wrap_content"
 
         android:layout_alignParentBottom="true"
-        android:layout_margin="14dp"
-
-        app:cardBackgroundColor="@color/colorPrimary">
+        android:layout_margin="@dimen/_11sdp">
 
         <TextView
             android:id="@+id/MORETXT"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:padding="20dp"
+            android:padding="@dimen/_11sdp"
             android:text="View More 450 Result"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            android:background="@drawable/blue_button_rounded_corner"/>
     </androidx.cardview.widget.CardView>
 </RelativeLayout>

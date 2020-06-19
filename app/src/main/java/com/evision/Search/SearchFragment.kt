@@ -16,6 +16,7 @@ import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -32,6 +33,12 @@ import com.google.gson.Gson
 import kotlinx.android.synthetic.main.content_check_out_address.*
 import kotlinx.android.synthetic.main.fragment_search.*
 import org.json.JSONObject
+import android.view.WindowManager
+import android.os.Build
+import com.evision.mainpage.MainActivity
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -56,6 +63,12 @@ class SearchFragment : DialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(DialogFragment.STYLE_NORMAL, R.style.dialog_theme);
+        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            activity!!.window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            activity!!.window.setStatusBarColor(ContextCompat.getColor(activity!!, R.color.colorPrimaryDark))
+        }*/
+
+     //   (activity as MainActivity).updateStatusBarColor()
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
@@ -70,6 +83,12 @@ class SearchFragment : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Objects.requireNonNull(Objects.requireNonNull(getDialog())!!.getWindow()).addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            Objects.requireNonNull(Objects.requireNonNull(getDialog())!!.getWindow()).setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
+        }
         Rec_listP=view.findViewById(R.id.Rec_listP)
         Rec_listP.layoutManager = LinearLayoutManager(activity) as RecyclerView.LayoutManager?
         adapter = AdapterProductSearch(activity!!,prod_list!!)
@@ -115,16 +134,17 @@ class SearchFragment : DialogFragment() {
             override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
                 if(actionId== EditorInfo.IME_ACTION_SEARCH)
                 {
-                    IMG_SEARCH.performClick()
+                   // IMG_SEARCH.performClick()
+                    callsearchApi()
                     return  true
                 }
                 return false
             }
 
         })
-        IMG_SEARCH.setOnClickListener {
+       /* IMG_SEARCH.setOnClickListener {
             callsearchApi()
-        }
+        }*/
 
     }
 

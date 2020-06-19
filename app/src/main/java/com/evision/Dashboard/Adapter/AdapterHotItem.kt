@@ -29,7 +29,7 @@ class AdapterHotItem(hotCategory: List<Product>, mContext: Context) : RecyclerVi
     override fun onBindViewHolder(p0: VHolder, p1: Int) {
         val itemdata = hotCategory.get(p1)
         p0.TXT_name.setText(itemdata.product_name)
-        Glide.with(mContext).load(itemdata.product_image).apply(RequestOptions().centerCrop().placeholder(R.drawable.ic_placeholder)).into(p0.IMG_item)
+        Glide.with(mContext).load(itemdata.product_image).apply(RequestOptions().placeholder(R.drawable.ic_placeholder)).into(p0.IMG_item)
         p0.itemView.setOnClickListener {
             mContext.startActivity(Intent(mContext, ProductDetailsActivity::class.java).putExtra("pid", itemdata.product_id))
         }

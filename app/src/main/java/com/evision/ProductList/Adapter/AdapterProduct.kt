@@ -1,17 +1,18 @@
 package com.evision.ProductList.Adapter
 
+import android.app.AlertDialog
+import android.app.Dialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Paint
-import android.os.Build
 
 import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.view.Window
+import android.widget.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.evision.Login_Registration.LoginActivity
@@ -20,11 +21,12 @@ import com.evision.ProductList.ProductDetailsActivity
 import com.evision.ProductList.ProductListActivity
 import com.evision.R
 import com.evision.Utils.*
-import com.google.gson.Gson
 import org.json.JSONObject
-import android.graphics.Paint.STRIKE_THRU_TEXT_FLAG
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.evision.CartManage.CartActivity
+import com.evision.CartManage.CheckOutAddress
+import com.evision.mainpage.MainActivity
 
 
 class AdapterProduct(mContext: Context, list: List<Product>) : RecyclerView.Adapter<AdapterProduct.VHolder>() {
@@ -40,6 +42,7 @@ class AdapterProduct(mContext: Context, list: List<Product>) : RecyclerView.Adap
         val TXT_ModelNo = itemView.findViewById<TextView>(R.id.TXT_ModelNo)
         val SPCLPRICE = itemView.findViewById<TextView>(R.id.SPCLPRICE)
         val TXT_DESCRIPTION = itemView.findViewById<TextView>(R.id.TXT_DESCRIPTION)
+        val ll_price_in_list=itemView.findViewById<LinearLayout>(R.id.ll_price_in_list)
     }
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): AdapterProduct.VHolder {
@@ -86,6 +89,10 @@ class AdapterProduct(mContext: Context, list: List<Product>) : RecyclerView.Adap
             p0.SPCLPRICE.paintFlags = p0.TXT_Price.getPaintFlags() or Paint.STRIKE_THRU_TEXT_FLAG
         }
 
+        if(item.price.equals("0.00")) {
+         p0.ll_price_in_list.visibility=View.INVISIBLE
+        }
+
         p0.TXT_Add_cart.setOnClickListener {
 
             if(ShareData(mContext).getUser()==null)
@@ -93,7 +100,7 @@ class AdapterProduct(mContext: Context, list: List<Product>) : RecyclerView.Adap
              mContext as ProductListActivity
                 (mContext as AppCompatActivity).startActivityForResult(Intent(mContext,LoginActivity::class.java),11)
             }else{
-                // TODO: ADD TO CART API CALL
+             //  aleraddtocart(item)
                 val params=HashMap<String,Any>()
                 params.put("customer_id",ShareData(mContext).getUser()!!.customerId)
                 params.put("product_id",item.productId)
@@ -105,11 +112,12 @@ class AdapterProduct(mContext: Context, list: List<Product>) : RecyclerView.Adap
                         if(JSONObject(response).optInt("code")==200)
                         {
                             val  userdata=ShareData(mContext).getUser()
-                                userdata!!.cartCount=JSONObject(response).optInt("cart_count")
+                            userdata!!.cartCount=JSONObject(response).optInt("cart_count")
 
-                                ShareData(mContext).SetUserData(userdata)
+                            ShareData(mContext).SetUserData(userdata)
                             mContext as ProductListActivity
                             mContext.ManageCartView()
+                            showCartalert()
 
                         }
                         Toast.makeText(mContext,JSONObject(response).optString("message"),Toast.LENGTH_LONG).show()
@@ -128,5 +136,98 @@ class AdapterProduct(mContext: Context, list: List<Product>) : RecyclerView.Adap
                 })
             }
         }
+
     }
+    fun aleraddtocart(item: Product) {
+        var alertBuilder: AlertDialog.Builder = AlertDialog.Builder(mContext);
+        alertBuilder.setCancelable(true);
+        alertBuilder.setTitle(mContext.resources.getString(R.string.app_name));
+        alertBuilder.setMessage("Are you want to add this item in  your cart?")
+        alertBuilder.setPositiveButton("Yes",object : DialogInterface.OnClickListener{
+            override fun onClick(dialog: DialogInterface?, which: Int) {
+                dialog!!.dismiss()
+                val params=HashMap<String,Any>()
+                params.put("customer_id",ShareData(mContext).getUser()!!.customerId)
+                params.put("product_id",item.productId)
+                params.put("qty",1)
+                onHTTP().POSTCALL(com.evision.Utils.URL.ADDtoCART,params,object : OnHttpResponse {
+                    override fun onSuccess(response: String) {
+                        EvisionLog.D("## DATA-",response)
+                        loader.dismiss()
+                        if(JSONObject(response).optInt("code")==200)
+                        {
+                            val  userdata=ShareData(mContext).getUser()
+                            userdata!!.cartCount=JSONObject(response).optInt("cart_count")
+
+                            ShareData(mContext).SetUserData(userdata)
+                            mContext as ProductListActivity
+                            mContext.ManageCartView()
+
+
+                        }
+                        Toast.makeText(mContext,JSONObject(response).optString("message"),Toast.LENGTH_LONG).show()
+
+                    }
+
+                    override fun onError(error: String) {
+                        loader.dismiss()
+
+                    }
+
+                    override fun onStart() {
+                        loader.show()
+                    }
+
+                })
+            }
+        })
+        alertBuilder.setNegativeButton("No",object : DialogInterface.OnClickListener{
+            override fun onClick(dialog: DialogInterface?, which: Int) {
+                dialog!!.dismiss()
+            }
+        })
+        val alert = alertBuilder.create()
+        alert.show()
+    }
+
+    fun showCartalert() {
+        // var deviceResolution:DeviceResolution?=null
+        val alertDialog = Dialog(mContext, R.style.Transparent)
+        /*alertDialog.setTitle(activity.resources.getString(R.string.app_name))
+        alertDialog.setMessage(message)*/
+        alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        val view: View = LayoutInflater.from(mContext).inflate(R.layout.alert_layout_aftercart, null)
+        alertDialog.setContentView(view)
+        alertDialog.setCancelable(false)
+        val tv_message: TextView = view.findViewById(R.id.tv_message)
+        val btn_ok: Button = view.findViewById(R.id.btn_proced)
+        val btn_no: Button = view.findViewById(R.id.btn_seg)
+        val img_cart_cross:ImageView=view.findViewById(R.id.img_cart_cross)
+
+        btn_ok.setOnClickListener {
+            alertDialog.dismiss()
+            mContext as ProductListActivity
+            mContext.finish()
+           /* val intents:Intent=  Intent(mContext, MainActivity::class.java);
+            intents.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            intents.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            mContext.startActivity(intents)*/
+            // activity.alertyesfuncation();
+            // activity.calllogoutdeleteusertoken()
+        }
+        btn_no.setOnClickListener {
+            alertDialog.dismiss()
+            mContext.startActivity(Intent(mContext, CheckOutAddress::class.java))
+
+        }
+        img_cart_cross.setOnClickListener {
+            alertDialog.dismiss()
+        }
+        //tv_message.setText("")
+        alertDialog.show()
+        /*alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+            DialogInterface.OnClickListener { dialog, which -> dialog.dismiss() })
+        alertDialog.show()*/
+    }
+
 }

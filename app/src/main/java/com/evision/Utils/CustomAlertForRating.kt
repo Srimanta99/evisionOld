@@ -1,18 +1,23 @@
 package com.evision.Utils
 
-import android.annotation.SuppressLint
 import android.app.Dialog
-import android.content.Context
 import android.os.Bundle
+import android.os.Handler
 import android.view.Window
 import com.evision.R
 import android.view.WindowManager
 import android.widget.*
 import com.evision.Login_Registration.Pojo.LoginResponse
+import com.evision.ProductList.ProductDetailsActivity
 import com.google.gson.Gson
 import org.json.JSONObject
 
-class CustomAlertForRating(context: Context,val  pid: String, val user: LoginResponse) : Dialog(context) {
+
+
+
+
+
+class CustomAlertForRating(val productDetailsActivity: ProductDetailsActivity,val  pid: String, val user: LoginResponse) : Dialog(productDetailsActivity) {
     lateinit var loader: AppDialog
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,9 +40,12 @@ class CustomAlertForRating(context: Context,val  pid: String, val user: LoginRes
         }
         val btn_submit:Button=findViewById(R.id.btn_submit)
         btn_submit.setOnClickListener {
-            if (ratingbar.rating>0 && !til_writecommant.text.toString().equals("") )
-            callApiforsubmitreviewrating(ratingbar.rating,til_writecommant.text.toString())
-            else
+            if (ratingbar.rating>0 && !til_writecommant.text.toString().equals("") ) {
+                productDetailsActivity.runOnUiThread({
+                    callApiforsubmitreviewrating(ratingbar.rating, til_writecommant.text.toString())
+                })
+                //  productDetailsActivity!!.callApiforsubmitreviewrating(ratingbar.rating,til_writecommant.text.toString(),pid!!,user!!.customerId)
+            }else
                 Toast.makeText(context," Debe llenar todos los campos?",Toast.LENGTH_LONG).show()
 
         }
@@ -57,7 +65,6 @@ class CustomAlertForRating(context: Context,val  pid: String, val user: LoginRes
         params.put("review_comment",reviewmessage)
         EvisionLog.D("## PARAMS-", Gson().toJson(params))
         onHTTP().POSTCALL(com.evision.Utils.URL.RATE_PRODUCT, params, object : OnHttpResponse {
-            @SuppressLint("RestrictedApi")
             override fun onSuccess(response: String) {
                 EvisionLog.D("## DATA-", response)
                 val listdata = Gson().fromJson(response, NotifyApiResponse::class.java)
@@ -74,16 +81,16 @@ class CustomAlertForRating(context: Context,val  pid: String, val user: LoginRes
                     Toast.makeText(context, JSONObject(response).optString("message"), Toast.LENGTH_LONG).show()
 
                 }
-                loader.dismiss()
+                productDetailsActivity.loader.dismiss()
             }
 
             override fun onError(error: String) {
-                loader.dismiss()
+                productDetailsActivity.loader.dismiss()
 
             }
 
             override fun onStart() {
-                loader.show()
+                productDetailsActivity.loader.show()
             }
 
         })

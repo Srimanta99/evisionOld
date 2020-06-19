@@ -53,6 +53,7 @@ public class URL {
     public static final String SEND_ADDRESS=BASE+"checkout/getmapaddress.php";
     public static final String NOTIFY_USER= BASE+"user/account/notifyproemail.php";
     public static final String RATE_PRODUCT=BASE+"user/account/customer_review.php";
+    public  static final String SENDTOKEN=BASE+"user/mobileappinfo.php";
 
 
 }

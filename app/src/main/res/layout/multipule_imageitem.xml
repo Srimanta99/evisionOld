@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="@dimen/_70sdp">
+    <ImageView
+        android:id="@+id/img_products"
+        android:layout_width="@dimen/_100sdp"
+        android:layout_height="match_parent"></ImageView>
+    <TextView
+        android:layout_width="@dimen/_4sdp"
+        android:layout_height="match_parent"></TextView>
+</LinearLayout>

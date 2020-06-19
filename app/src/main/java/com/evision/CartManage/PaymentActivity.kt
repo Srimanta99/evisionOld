@@ -25,17 +25,22 @@ import com.github.dewinjm.monthyearpicker.MonthYearPickerDialogFragment
 import java.util.*
 import kotlin.collections.HashMap
 import android.app.Activity
+import android.content.ActivityNotFoundException
+import android.net.Uri
 
 import android.view.inputmethod.InputMethodManager
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat
+import androidx.core.content.IntentCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.evision.mainpage.MainActivity
 import com.google.android.material.textfield.TextInputEditText
-
-
+import com.wednesday.creditcardedittext.CreditCardEditText
 class PaymentActivity : AppCompatActivity() {
     var DeliveryType = ""
     var DeliverySubType = ""
@@ -43,6 +48,7 @@ class PaymentActivity : AppCompatActivity() {
     var CUPONPRICE = ""
     var DISCOUNTFOR=""
     var PRODUCT_IDS=""
+    var DISCOUNTTYPE=""
     var is_same = false
     var expirationMonth=""
     var expirationYear=""
@@ -57,6 +63,9 @@ class PaymentActivity : AppCompatActivity() {
     lateinit var til_expairdate:TextInputEditText
     lateinit var til_card_no:TextInputEditText
     lateinit var cvv:TextInputEditText
+    var textview_credit_card: CreditCardEditText?=null
+    var  delivery_cost:String?="";
+    var selectpaymentoption:Boolean=false
 
     var cardtypelist= arrayOf("American express","uuuyuqyqeryqwury","whqudhoqwuyroi")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,6 +78,11 @@ class PaymentActivity : AppCompatActivity() {
         customerAddress = intent.getParcelableExtra("shipping")
         customerAddress_billing = intent.getParcelableExtra("billing")
         is_same = intent.getBooleanExtra("is_same", false)
+        delivery_cost=intent.getStringExtra("delivery_cost")
+
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
         loader = AppDialog(this)
         toolbar.setTitle(R.string.title_add_toocart)
         toolbar.setTitleTextColor(Color.WHITE)
@@ -76,8 +90,9 @@ class PaymentActivity : AppCompatActivity() {
         supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_white_back)
         RECV=findViewById(R.id.RECV)
         til_expairdate=findViewById(R.id.til_expairdate)
-        til_card_no=findViewById(R.id.til_card_no)
+       // til_card_no=findViewById(R.id.til_card_no)
         cvv=findViewById(R.id.cvv)
+        textview_credit_card=findViewById(R.id.textview_credit_card)
       //  til_card_no.addTextChangedListener(FourDigitCardFormatWatcher())
         order_coupon=findViewById(R.id.order_coupon)
         RECV.layoutManager = LinearLayoutManager(this) as RecyclerView.LayoutManager
@@ -112,21 +127,34 @@ class PaymentActivity : AppCompatActivity() {
                 .actionLabel("Purchase")
                 .setup(this)
         cardv.visibility = View.GONE*/
-        RG_PAY.setOnCheckedChangeListener { group, checkedId ->
+
+       RG_PAY.setOnCheckedChangeListener { group, checkedId ->
             when (checkedId) {
                 R.id.RB_CARD -> {
                    // cardv.visibility = View.VISIBLE
                     llcardholdername.visibility=View.VISIBLE
                     llcard_view.visibility=View.VISIBLE
+                    selectpaymentoption=true
                 }
                 R.id.RB_store -> {
                    // cardv.visibility = View.GONE
                     llcardholdername.visibility=View.GONE
                     llcard_view.visibility=View.GONE
+                    selectpaymentoption=false
                 }
             }
         }
-
+       /* RB_CARD.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked){
+                llcardholdername.visibility=View.VISIBLE
+                llcard_view.visibility=View.VISIBLE
+                selectpaymentoption=true
+            }else{
+                llcardholdername.visibility=View.GONE
+                llcard_view.visibility=View.GONE
+                selectpaymentoption=false
+            }
+        }*/
 
         loadData()
         RECV.layoutManager = LinearLayoutManager(this)
@@ -141,10 +169,14 @@ class PaymentActivity : AppCompatActivity() {
         }
 
         BTN_pay.setOnClickListener {
-           if(chk_term.isChecked) {
-               ORDERPLACE()
-           }else
-               Toast.makeText(this,"Por favor verifique el término y la política",Toast.LENGTH_LONG).show()
+          //  if (selectpaymentoption) {
+                if (chk_term.isChecked) {
+
+                    ORDERPLACE()
+                } else
+                    Toast.makeText(this, "Por favor, acepte el término y la política.", Toast.LENGTH_LONG).show()
+           // }else
+                //Toast.makeText(this, "Seleccionar opción de pago", Toast.LENGTH_LONG).show()
         }
 
 
@@ -181,7 +213,7 @@ class PaymentActivity : AppCompatActivity() {
         dialogFragment.show(supportFragmentManager, null)
 
         dialogFragment.setOnDateSetListener { year, monthOfYear ->
-            expirationMonth=formatnumber(monthOfYear)
+            expirationMonth=formatnumber(monthOfYear+1)
             expirationYear=year.toString()
             til_expairdate.setText(formatnumber(monthOfYear+1)+"/"+year.toString())
             // do something
@@ -246,12 +278,12 @@ class PaymentActivity : AppCompatActivity() {
             }*//*
         }*/
         if (llcard_view.visibility == View.VISIBLE) {
-            if (til_card_no.text.isNullOrEmpty()) {
-                til_card_no.requestFocus()
+            if (textview_credit_card!!.text.isNullOrEmpty()) {
+                textview_credit_card!!.requestFocus()
                 return
             }
-            if (til_card_no.text!!.length<16) {
-                til_card_no.requestFocus()
+            if (textview_credit_card!!.creditCardNumber.length<16) {
+                textview_credit_card!!.requestFocus()
                 return
             }
 
@@ -280,7 +312,7 @@ class PaymentActivity : AppCompatActivity() {
         params.put("address_2", customerAddress.address)
         params.put("city_id", customerAddress.city_id)
         params.put("state_id", customerAddress.state_id)
-        params.put("country_id", 169)
+        params.put("country_id", customerAddress.country_id)
         params.put("telephone", customerAddress.telephone)
 //        params.put("address_ship", if (is_same) 1 else 0)
         params.put("address_ship", 1)
@@ -301,11 +333,12 @@ class PaymentActivity : AppCompatActivity() {
         params.put("discount_for",DISCOUNTFOR)
         params.put("product_ids", PRODUCT_IDS)
         params.put("discount_amount",CUPONPRICE)
+      //  params.put("delivery_amount",delivery_cost!!)
 
         if (llcard_view.visibility == View.VISIBLE)
            params.put("payment_method","online")
         else
-            params.put("payment_method","offline")
+            params.put("payment_method","bank_transfer")
 
         EvisionLog.D("## URL-", URL.ORDERPALCEINSTORE)
         EvisionLog.D("## REQ PLACE-", Gson().toJson(params))
@@ -322,8 +355,24 @@ class PaymentActivity : AppCompatActivity() {
                         logindata!!.cartCount = 0
                         ShareData(this@PaymentActivity).SetUserData(Gson().toJson(logindata).toString())
                         /***** ***************/
-                        val URL = URL.BASE + "checkout/payment.php?order_id=" + orderID + "&ccnumber="+til_card_no.text.toString()+"&ccexp="+expirationMonth+expirationYear+"&cvv="+cvv.text.toString()
+                        val URL = URL.BASE + "checkout/payment.php?order_id=" + orderID + "&ccnumber="+textview_credit_card!!.creditCardNumber.toString()+"&ccexp="+expirationMonth+expirationYear+"&cvv="+cvv.text.toString()
                         startActivity(Intent(this@PaymentActivity, PaymentCeditCardActivity::class.java).putExtra("loaderURL", URL))
+                       // finish()
+                      //  val browserIntent:Intent =  Intent(Intent.ACTION_VIEW, Uri.parse(URL))
+                        //this@PaymentActivity.startActivity(browserIntent)
+                       /* browserIntent.setPackage("com.android.chrome")
+                        try {
+                            this@PaymentActivity.startActivity(intent);
+                        } catch ( ex: ActivityNotFoundException) {
+                            // Chrome browser presumably not installed and open Kindle Browser
+                            this@PaymentActivity.startActivity(browserIntent)
+
+                        }*/
+
+                      /*  val intents:Intent=  Intent(this@PaymentActivity, MainActivity::class.java);
+                           intents.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        intents.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                        this@PaymentActivity.startActivity(intents)*/
                         finish()
                     } else {
                         var logindata = ShareData(this@PaymentActivity).getUser()
@@ -366,6 +415,7 @@ class PaymentActivity : AppCompatActivity() {
                     CUPONPRICE=JSONObject(response).optString("discount_amount")
                     DISCOUNTFOR=JSONObject(response).optString("discount_for")
                     PRODUCT_IDS=JSONObject(response).optString("proids")
+                    DISCOUNTTYPE=JSONObject(response).optString("discount_type")
                 }
                 val data = Gson().fromJson(response, CartResponse::class.java)
 
@@ -396,10 +446,14 @@ class PaymentActivity : AppCompatActivity() {
             params.put("delivery_type", "B")
         else
             params.put("delivery_type", "A")
+
         params.put("coupon_code", CUPONCODE)
         params.put("discount_for",DISCOUNTFOR)
         params.put("product_ids",PRODUCT_IDS)
         params.put("coupon_amount", CUPONPRICE)
+        params.put("delivery_amount",delivery_cost!!)
+        params.put("discount_type",DISCOUNTTYPE)
+
         onHTTP().POSTCALL(URL.GETREVIEW, params, object : OnHttpResponse {
             override fun onSuccess(response: String) {
                 EvisionLog.D("## DATA DELIVERY-", response)
@@ -418,12 +472,14 @@ class PaymentActivity : AppCompatActivity() {
                     TACpercent.setText("" + data.order_totals[0].tax_name)
                     tax.setText(data.order_totals[0].currency + data.order_totals[0].tax)
                     tv_delivery.setText("Delivery Charge "+"( "+data.order_totals[0].delivery_type+" )")
+                    //tv_delivery.setText("Delivery Charge ")
+
                     tv_deliveryamount.setText(data.order_totals[0].currency + data.order_totals[0].delivery)
                     TOTAL.setText(data.order_totals[0].currency + data.order_totals[0].grand_total)
 
                     if (DISCOUNTFOR.equals("orders")){
                         order_coupon.visibility=View.VISIBLE
-                        tv_couponamount.setText(CUPONPRICE)
+                        tv_couponamount.setText(data.order_totals[0].currency+CUPONPRICE)
                     }else
                         order_coupon.visibility=View.GONE
                 }

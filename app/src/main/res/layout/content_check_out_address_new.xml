@@ -178,7 +178,7 @@
                     android:gravity="center_vertical"
                     android:inputType="text"
                     android:paddingRight="5dp"
-                    android:hint="@string/selectstate"
+                    android:hint="@string/state"
                     android:textColor="@color/black"
                     android:textColorHint="@color/blackhint"
                     android:textSize="16sp" />
@@ -214,7 +214,7 @@
                     android:gravity="center_vertical"
                     android:inputType="text"
                     android:paddingRight="5dp"
-                    android:hint="@string/selectcity"
+                    android:hint="@string/city"
                     android:textColor="@color/black"
                     android:textColorHint="@color/blackhint"
                     android:textSize="16sp" />
@@ -436,7 +436,7 @@
                 android:drawableRight="@drawable/ic_keyboard_arrow_down_black_24dp"
                 android:gravity="center_vertical"
                 android:inputType="text"
-                android:hint="@string/selectstate"
+                android:hint="@string/state"
                 android:paddingRight="5dp"
                 android:textColor="@color/black"
                 android:textColorHint="@color/blackhint"
@@ -473,7 +473,7 @@
                 android:gravity="center_vertical"
                 android:inputType="text"
                 android:paddingRight="5dp"
-                android:hint="@string/selectcity"
+                android:hint="@string/city"
                 android:textColor="@color/black"
                 android:textColorHint="@color/blackhint"
                 android:textSize="16sp" />
@@ -550,13 +550,15 @@
         <Button
             android:id="@+id/BTN_NEXT"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/_32sdp"
             android:layout_gravity="right"
-            android:backgroundTint="@color/colorPrimary"
+            android:background="@drawable/blue_button_rounded_corner"
             android:drawableRight="@drawable/ic_right_arrow_white"
             android:drawablePadding="5dp"
+            android:padding="@dimen/_7sdp"
             android:gravity="center_vertical"
             android:text="@string/next"
+            android:textSize="@dimen/_10sdp"
             android:textColor="@color/white" />
 
     </LinearLayout>

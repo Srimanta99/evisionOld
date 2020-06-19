@@ -52,7 +52,7 @@
             <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1.2">
+                    android:layout_weight="1.22">
                 <Button
                         android:id="@+id/btn_remindermelater"
                         android:layout_width="@dimen/_100sdp"
@@ -63,6 +63,7 @@
 
                         android:textColor="@color/white"
                         android:textSize="@dimen/_8sdp"
+                    android:padding="@dimen/_1sdp"
                         android:background="@drawable/rectangle_btn_rating"
                         android:layout_centerHorizontal="true"></Button>
             </RelativeLayout>

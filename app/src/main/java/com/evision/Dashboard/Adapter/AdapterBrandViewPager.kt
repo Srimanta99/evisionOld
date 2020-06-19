@@ -41,8 +41,8 @@ class AdapterBrandViewPager(mContext: Context, arrayList: List<HomeBrand>) : Pag
 
         val layout = inflater.inflate(R.layout.home_brand_item, container, false)!!
         val ImageView=layout.findViewById<ImageView>(R.id.img_homebrand)
-        val txt_homebrandname=layout.findViewById<TextView>(R.id.txt_homebrandname)
-        txt_homebrandname.setText(arraylist.get(position).brand_name)
+       // val txt_homebrandname=layout.findViewById<TextView>(R.id.txt_homebrandname)
+       // txt_homebrandname.setText(arraylist.get(position).brand_name)
         Glide.with(mContext).load(arraylist.get(position).brand_image).apply(RequestOptions().centerInside().placeholder(R.drawable.ic_placeholder)).into(ImageView)
         container.addView(layout)
         ImageView.setOnClickListener {

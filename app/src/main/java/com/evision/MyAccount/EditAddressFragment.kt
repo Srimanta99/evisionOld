@@ -15,6 +15,7 @@ import com.evision.MyAccount.Dilogs.SlectStateFragment
 
 import com.evision.R
 import com.evision.Utils.*
+import com.evision.mainpage.MainActivity
 import kotlinx.android.synthetic.main.fragment_edit_address.*
 import org.json.JSONObject
 
@@ -42,6 +43,7 @@ class EditAddressFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+        //(activity as MainActivity).updateStatusBarColor()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,

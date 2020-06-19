@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     tools:context=".CartManage.PaymentActivity">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -45,7 +46,7 @@
                     android:textColor="@color/black"
                     android:textSize="18sp" />
 
-                <RadioGroup
+               <RadioGroup
                     android:id="@+id/RG_PAY"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -63,9 +64,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:checked="true"
-                        android:text="Pay in store" />
+                        android:text="Pago por ACH " />
 
-                </RadioGroup>
+             </RadioGroup>
 
                 <LinearLayout
                     android:id="@+id/llcardholdername"
@@ -130,7 +131,10 @@
                     android:id="@+id/llcard_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@color/light_grey"
                     android:visibility="gone">
+
+
                     <RelativeLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
@@ -148,8 +152,14 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:orientation="vertical">
-
-                        <com.google.android.material.textfield.TextInputLayout
+                        <com.wednesday.creditcardedittext.CreditCardEditText
+                            android:id="@+id/textview_credit_card"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textNoSuggestions"
+                            custom:separator="-"
+                            android:hint = "@string/card_number"/>
+                        <!--<com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/til_card"
                             android:layout_width="match_parent"
                             android:layout_marginTop = "@dimen/_3sdp"
@@ -164,7 +174,7 @@
                                 android:paddingLeft="@dimen/_5sdp"
                                 android:inputType = "numberDecimal"/>
 
-                        </com.google.android.material.textfield.TextInputLayout>
+                        </com.google.android.material.textfield.TextInputLayout>-->
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/til_validdate"
                             android:layout_width="match_parent"
@@ -184,10 +194,7 @@
                             android:layout_width = "match_parent"
                             android:layout_height = "wrap_content"
                             android:id = "@+id/cvvnumber"
-                            android:layout_marginTop = "@dimen/_3sdp"
-
-
-                            >
+                            android:layout_marginTop = "@dimen/_3sdp">
                             <com.google.android.material.textfield.TextInputEditText
                                 android:layout_width = "match_parent"
                                 android:layout_height = "wrap_content"
@@ -284,7 +291,9 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+
+                    >
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/RECV"
@@ -320,6 +329,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
+
                         android:padding="5dp">
 
                         <TextView
@@ -402,45 +412,54 @@
 
                     </LinearLayout>
                 </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/BTN_pay"
+                    android:layout_margin="@dimen/_5sdp"
+                    android:orientation="horizontal">
 
+                    <CheckBox
+                        android:id="@+id/chk_term"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/_9sdp"
+                        android:text="@string/accepttermcondition"></CheckBox>
+
+                    <TextView
+                        android:id="@+id/term1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_5sdp"
+                        android:textSize="@dimen/_8sdp"
+                        android:text="@string/term1"
+                        android:textColor="@color/colorPrimary"
+                        android:clickable="true" />
+
+                    <TextView
+                        android:id="@+id/term2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/_8sdp"
+                        android:layout_marginLeft="@dimen/_10sdp"
+                        android:text="@string/policy"
+                        android:textColor="@color/colorPrimary"
+                        android:clickable="true" />
+
+                </LinearLayout>
+
+               <!-- <CheckBox
+                    android:id="@+id/chk_notification"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/_9sdp"
+                    android:layout_margin="@dimen/_5sdp"
+                    android:text="@string/acceptnotification"></CheckBox>-->
 
             </LinearLayout>
+
         </androidx.core.widget.NestedScrollView>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/BTN_pay"
-            android:layout_margin="@dimen/_5sdp"
-            android:orientation="horizontal">
 
-            <CheckBox
-                android:id="@+id/chk_term"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/_9sdp"
-                android:text="@string/accepttermcondition"></CheckBox>
-
-            <TextView
-                android:id="@+id/term1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/_5sdp"
-                android:textSize="@dimen/_8sdp"
-                android:text="@string/term1"
-                android:textColor="@color/colorPrimary"
-                android:clickable="true" />
-
-            <TextView
-                android:id="@+id/term2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/_8sdp"
-                android:layout_marginLeft="@dimen/_10sdp"
-                android:text="@string/policy"
-                android:textColor="@color/colorPrimary"
-                android:clickable="true" />
-
-        </LinearLayout>
 
         <Button
             android:id="@+id/BTN_pay"

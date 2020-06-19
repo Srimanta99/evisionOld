@@ -11,4 +11,7 @@
     <color name="black">#232323</color>
     <color name="yellow">#f2d129</color>
     <color name="grey">#787771</color>
+    <color name="light_grey">#b0b0b0</color>
+    <color name="green">#16d92c</color>
+    <color name="skyblue">#11ddf0</color>
 </resources>

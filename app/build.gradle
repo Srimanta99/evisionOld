@@ -11,8 +11,8 @@ android {
         applicationId "com.evision"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 4
-        versionName "4.0"
+        versionCode 11
+        versionName "11"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -59,6 +59,8 @@ dependencies {
     implementation 'com.github.dewinjm:monthyear-picker:1.0.2'
     implementation 'com.google.firebase:firebase-analytics:17.2.3'
     implementation 'com.google.android.material:material:1.1.0-alpha10'
+    implementation project(':library')
+    implementation 'com.google.firebase:firebase-messaging:20.2.0'
 
 }
 

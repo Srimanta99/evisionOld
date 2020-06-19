@@ -4,8 +4,10 @@ import android.app.Activity
 import android.graphics.Color
 
 import android.os.Bundle
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.evision.Login_Registration.Pojo.LoginResponse
 import com.evision.R
 import com.evision.Utils.*
@@ -21,7 +23,11 @@ class SignUpActivity : AppCompatActivity() {
         setContentView(R.layout.activity_sign_up)
         loader = AppDialog(this)
         shareData = ShareData(this)
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
         CreateAc.setOnClickListener {
+
             if (Edx_fname.text.toString().trim().isEmpty()) {
                 Edx_fname.requestFocus()
                 Edx_fname.setHintTextColor(Color.RED)
@@ -68,6 +74,7 @@ class SignUpActivity : AppCompatActivity() {
         params.put("email", EDX_email.text.toString())
         params.put("password", EDX_password.text.toString())
         params.put("telephone", EDX_mob.text.toString())
+        params.put("register_imei_number", ShareData(this).read("IMEI","iemi")!!)
 
         onHTTP().POSTCALL(URL.REGISTERNEWACC, params, object : OnHttpResponse {
             override fun onSuccess(response: String) {

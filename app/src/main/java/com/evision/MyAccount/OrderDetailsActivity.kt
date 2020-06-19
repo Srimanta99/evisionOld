@@ -5,6 +5,7 @@ import android.os.Bundle
 
 import android.text.Html
 import android.view.MenuItem
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,6 +16,7 @@ import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_order_details.*
 import kotlinx.android.synthetic.main.content_order_details.*
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat
 import com.evision.Utils.*
 
 class OrderDetailsActivity : AppCompatActivity() {
@@ -25,6 +27,10 @@ class OrderDetailsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_order_details)
         var toolbar:Toolbar=findViewById(R.id.toolbar)
+
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
         setSupportActionBar(toolbar)
         toolbar.setTitleTextColor(Color.WHITE)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)

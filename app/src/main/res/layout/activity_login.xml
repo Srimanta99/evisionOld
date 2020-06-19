@@ -41,7 +41,7 @@
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="wrap_content"
-                android:padding="13dp"
+                android:padding="@dimen/_7sdp"
                 android:src="@drawable/ic_email" />
 
             <View
@@ -72,7 +72,7 @@
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="wrap_content"
-                android:padding="13dp"
+                android:padding="@dimen/_7sdp"
                 android:src="@drawable/ic_locked" />
 
             <View

@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
-import android.webkit.WebChromeClient
 import android.widget.Toast
 import com.evision.CartManage.Adapter.AdapterCart
 import com.evision.CartManage.Pojo.CartResponse
@@ -16,18 +15,15 @@ import com.evision.R
 import com.evision.Utils.*
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_cart.*
-import kotlinx.android.synthetic.main.content_check_out_address.*
-import org.json.JSONObject
 import java.text.DecimalFormat
-import android.webkit.WebResourceError
-import android.webkit.WebResourceRequest
-import android.webkit.WebView
-import android.annotation.TargetApi
-import android.webkit.WebViewClient
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.evision.CartManage.Adapter.UpsellProductAdapter
+import com.evision.CartManage.Pojo.UpsellProductItem
 
 
 class CartActivity : AppCompatActivity() {
@@ -47,7 +43,9 @@ class CartActivity : AppCompatActivity() {
          RECV=findViewById<RecyclerView>(R.id.RECV)
         RECV.layoutManager = LinearLayoutManager(this)
 
-
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
 
         if (ShareData(this).getUser() == null) {
             startActivityForResult(Intent(this, LoginActivity::class.java), 21)
@@ -108,6 +106,14 @@ class CartActivity : AppCompatActivity() {
                     TACpercent.setText("" + data.cart_totals[0].tax_name)
                     tax.setText(data.cart_totals[0].currency + data.cart_totals[0].tax)
                     TOTAL.setText(data.cart_totals[0].currency + number2digits_grandtotal)
+
+                   /* val upsell_products=data.upsell_products
+                    if(upsell_products.size>0){
+                        ll_upsellproduct.visibility=View.VISIBLE
+                        setadapter(upsell_products)
+                    }else{
+                        ll_upsellproduct.visibility=View.GONE
+                    }*/
                 }
                 loader.dismiss()
             }
@@ -122,6 +128,14 @@ class CartActivity : AppCompatActivity() {
             }
 
         })
+    }
+
+    private fun setadapter(upsellProducts: List<UpsellProductItem>) {
+        rec_upsellproducr.layoutManager = LinearLayoutManager(this) as RecyclerView.LayoutManager?
+       val  adapter = UpsellProductAdapter(this,upsellProducts!!)
+        rec_upsellproducr.adapter = adapter
+
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
