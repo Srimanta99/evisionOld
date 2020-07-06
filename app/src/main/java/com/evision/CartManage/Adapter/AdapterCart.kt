@@ -37,7 +37,7 @@ class AdapterCart(mCotext: Context, arrayList: CartResponse, loader: AppDialog) 
     override fun onBindViewHolder(holder: AdapterCart.ViewHolder, position: Int) {
         val itemData = arrayList.cart_items.get(position)
 
-        Glide.with(mContext).load(itemData.image_path).apply(RequestOptions().centerCrop().placeholder(R.drawable.ic_placeholder)).into(holder.IMG_item)
+        Glide.with(mContext).load(itemData.image_path).apply(RequestOptions().placeholder(R.drawable.ic_placeholder)).into(holder.IMG_item)
         holder.TXT_PName.setText(itemData.name)
         holder.TXT_MODEL.setText(itemData.modelo)
 

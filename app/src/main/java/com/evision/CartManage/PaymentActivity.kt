@@ -1,46 +1,49 @@
 package com.evision.CartManage
 
+import ApiInterface
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
+import android.widget.PopupWindow
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.braintreepayments.cardform.view.CardForm
 import com.evision.CartManage.Adapter.AdapterCartCheckout
-import com.evision.MyAccount.Pojo.StoreOrderPlaceResponse
-import com.evision.R
-import com.evision.Utils.*
-import com.google.gson.Gson
-import kotlinx.android.synthetic.main.sss.*
-import org.json.JSONObject
-import android.widget.PopupWindow
 import com.evision.CartManage.Adapter.CardListAdapter
 import com.evision.CartManage.Adapter.OnitemClick
 import com.evision.CartManage.Pojo.*
+import com.evision.MyAccount.Pojo.StoreOrderPlaceResponse
+import com.evision.R
+import com.evision.Utils.*
 import com.github.dewinjm.monthyearpicker.MonthYearPickerDialogFragment
-
+import com.google.android.material.textfield.TextInputEditText
+import com.google.gson.Gson
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
+import com.wecompli.network.Retrofit
+import com.wednesday.creditcardedittext.CreditCardEditText
+import kotlinx.android.synthetic.main.sss.*
+import okhttp3.ResponseBody
+import org.json.JSONObject
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.util.*
 import kotlin.collections.HashMap
-import android.app.Activity
-import android.content.ActivityNotFoundException
-import android.net.Uri
 
-import android.view.inputmethod.InputMethodManager
-import android.text.Editable
-import android.text.TextWatcher
-import android.view.WindowManager
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat
-import androidx.core.content.IntentCompat
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.evision.mainpage.MainActivity
-import com.google.android.material.textfield.TextInputEditText
-import com.wednesday.creditcardedittext.CreditCardEditText
 class PaymentActivity : AppCompatActivity() {
     var DeliveryType = ""
     var DeliverySubType = ""
@@ -66,6 +69,8 @@ class PaymentActivity : AppCompatActivity() {
     var textview_credit_card: CreditCardEditText?=null
     var  delivery_cost:String?="";
     var selectpaymentoption:Boolean=false
+    var grandtotal:Double=0.0
+    var order_id:String=""
 
     var cardtypelist= arrayOf("American express","uuuyuqyqeryqwury","whqudhoqwuyroi")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -134,13 +139,20 @@ class PaymentActivity : AppCompatActivity() {
                    // cardv.visibility = View.VISIBLE
                     llcardholdername.visibility=View.VISIBLE
                     llcard_view.visibility=View.VISIBLE
+                    ll_telred.visibility=View.GONE
                     selectpaymentoption=true
                 }
                 R.id.RB_store -> {
                    // cardv.visibility = View.GONE
                     llcardholdername.visibility=View.GONE
                     llcard_view.visibility=View.GONE
+                    ll_telred.visibility=View.GONE
                     selectpaymentoption=false
+                }
+                R.id.RB_TELRED->{
+                    llcardholdername.visibility=View.GONE
+                    llcard_view.visibility=View.GONE
+                    ll_telred.visibility=View.VISIBLE
                 }
             }
         }
@@ -168,15 +180,25 @@ class PaymentActivity : AppCompatActivity() {
             UPDATECUPON(EDX_COUPON.text.toString())
         }
 
+
         BTN_pay.setOnClickListener {
           //  if (selectpaymentoption) {
-                if (chk_term.isChecked) {
+               if(RB_TELRED.isChecked) {
+                   //if (checkblankfortelredpayment())
+                       if (chk_term.isChecked) {
+                           //calltokenvalidationApi()
+                           ORDERPLACE()
+                       } else
+                           Toast.makeText(this, "Por favor, acepte el término y la política.", Toast.LENGTH_LONG).show()
 
-                    ORDERPLACE()
-                } else
-                    Toast.makeText(this, "Por favor, acepte el término y la política.", Toast.LENGTH_LONG).show()
-           // }else
-                //Toast.makeText(this, "Seleccionar opción de pago", Toast.LENGTH_LONG).show()
+               }else {
+                   if (chk_term.isChecked) {
+                       ORDERPLACE()
+                   } else
+                       Toast.makeText(this, "Por favor, acepte el término y la política.", Toast.LENGTH_LONG).show()
+               }
+                // else
+               // Toast.makeText(this, "En desarrollo", Toast.LENGTH_LONG).show()
         }
 
 
@@ -186,6 +208,123 @@ class PaymentActivity : AppCompatActivity() {
             showmonthyeardialog();
 
         }
+
+    }
+
+    private fun calltokenvalidationApi() {
+       // loader.show()
+        val params = HashMap<String, Any>()
+        params.put("client_username", "evision_testing")
+        params.put("client_secret", "Ak#~U)7N{+y&")
+        params.put("client_type","1")
+        onHTTP().POSTCALL(URL.TOKENVALIDATION, params, object : OnHttpResponse {
+            override fun onStart() {
+                if (!loader.isShowing)
+                    loader.show()
+            }
+
+            override fun onSuccess(response: String) {
+                EvisionLog.D("## Pay RESPONSE-", response)
+                val auth_token = JSONObject(response).optString("authorization_token")
+                callApiforinitdeposite(auth_token)
+            }
+
+            override fun onError(error: String) {
+                loader.dismiss()
+            }
+        })
+    }
+
+    private fun callApiforinitdeposite(authToken: String) {
+        if (!loader.isShowing)
+            loader.show()
+        val apiInterface= Retrofit.retrofitInstance?.create(ApiInterface::class.java)
+        val min = 4000
+        val max = 10000
+        val random_int = (Math.random() * (max - min + 1) + min).toInt()
+        val tex=(grandtotal*7)/100
+       val retrrnurl= "https://www.evisionstore.com/api/checkout/payment_response.php?req_sessionId="+random_int.toString()+"&req_authorization="+authToken+"&req_orderId="+order_id
+        try {
+            val paramObject = JSONObject()
+            paramObject.put("commerceCode", "4134bd3c-0167-4e57-ba7d-6e6af15ee35e")
+             paramObject.put("amount", grandtotal!!)
+             paramObject.put("currency", "USD")
+            paramObject.put("clientId", "1234")
+            paramObject.put("clientSessionId", random_int)
+            paramObject.put("description", "payment test")
+            paramObject.put("skipRegister", true)
+            paramObject.put("contractNumber",customerAddress.telephone)
+            paramObject.put("returnUrl",retrrnurl)
+            paramObject.put("skipregister",true)
+            paramObject.put("itbms",tex)
+
+            var obj: JSONObject = paramObject
+            var jsonParser: JsonParser = JsonParser()
+            var gsonObject: JsonObject = jsonParser.parse(obj.toString()) as JsonObject;
+            val callApi = apiInterface.callApiinitdeposit("application/json", authToken,  gsonObject!!)
+            callApi.enqueue(object : Callback<InitDepositResponse>{
+                override fun onResponse(call: Call<InitDepositResponse>, response: Response<InitDepositResponse>) {
+                   // EvisionLog.D("## Pay RESPONSE init api-", response.body()!!.string())
+                    //val responseString = response.body()!!.string()
+                    //val gson = Gson()
+                   // val responseobj = gson.toJson(responseString)
+                    //val responseobj = JSONObject(responseString) as JSONObject
+                    //val responseobj = jsonParser.parse(response.body().toString()) as JsonObject
+                    val url:String=response!!.body()!!.url
+                  //  val clientSessionId=responseobj.getString("clientSessionId")
+                    loader.dismiss()
+                    //val intent=Intent(this@PaymentActivity,PaymentRedirectUrlActivity::class.java)
+                    //intent!!.putExtra("url", url!!)
+                    //startActivity(intent)
+                    startActivity(Intent(this@PaymentActivity, PaymentRedirectUrlActivity::class.java).putExtra("url", url!!))
+                     finish()
+                }
+
+                override fun onFailure(call: Call<InitDepositResponse>, t: Throwable) {
+                    loader.dismiss()
+
+                }
+            })
+        }catch (e:Exception){
+            e.printStackTrace()
+        }
+
+    }
+
+    private fun checkblankfortelredpayment(): Boolean {
+        if (mobileno!!.text.isNullOrEmpty()) {
+            mobileno!!.requestFocus()
+            return false
+        }
+      /*  if (amount!!.text.isNullOrEmpty()) {
+            amount!!.requestFocus()
+            return false
+        }
+        if (currency!!.text.isNullOrEmpty()) {
+            currency!!.requestFocus()
+            return false
+        }*/
+       /* if (clientId!!.text.isNullOrEmpty()) {
+            clientId!!.requestFocus()
+            return false
+        }
+        if (clientSessionId!!.text.isNullOrEmpty()) {
+            clientSessionId!!.requestFocus()
+            return false
+        }
+        if (description!!.text.isNullOrEmpty()) {
+            description!!.requestFocus()
+            return false
+        }
+        if (additionalData!!.text.isNullOrEmpty()) {
+            additionalData!!.requestFocus()
+            return false
+        }
+        if (returnUrl!!.text.isNullOrEmpty()) {
+            returnUrl!!.requestFocus()
+            return false
+        }*/
+        return true
 
     }
 
@@ -337,8 +476,11 @@ class PaymentActivity : AppCompatActivity() {
 
         if (llcard_view.visibility == View.VISIBLE)
            params.put("payment_method","online")
+        else if(ll_telred.visibility==View.VISIBLE)
+            params.put("payment_method","online")
         else
             params.put("payment_method","bank_transfer")
+
 
         EvisionLog.D("## URL-", URL.ORDERPALCEINSTORE)
         EvisionLog.D("## REQ PLACE-", Gson().toJson(params))
@@ -349,6 +491,7 @@ class PaymentActivity : AppCompatActivity() {
                 Toast.makeText(this@PaymentActivity, data.message, Toast.LENGTH_SHORT).show()
                 if (data.code == 200) {
                     val orderID = JSONObject(response).optString("order_id")
+                    order_id=orderID
                     if (llcard_view.visibility == View.VISIBLE) {
                         /**** TEMPORARY DATA *******/
                         var logindata = ShareData(this@PaymentActivity).getUser()
@@ -374,7 +517,14 @@ class PaymentActivity : AppCompatActivity() {
                         intents.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
                         this@PaymentActivity.startActivity(intents)*/
                         finish()
-                    } else {
+                    } else if(ll_telred.visibility==View.VISIBLE){
+                        var logindata = ShareData(this@PaymentActivity).getUser()
+                        logindata!!.cartCount = 0
+                        ShareData(this@PaymentActivity).SetUserData(Gson().toJson(logindata).toString())
+                        calltokenvalidationApi()
+                    }
+
+                    else {
                         var logindata = ShareData(this@PaymentActivity).getUser()
                         logindata!!.cartCount = 0
                         ShareData(this@PaymentActivity).SetUserData(Gson().toJson(logindata).toString())
@@ -384,9 +534,7 @@ class PaymentActivity : AppCompatActivity() {
                         startActivity(inte)
                         finish()
                     }
-                } else {
                 }
-
                 loader.dismiss()
             }
 
@@ -476,7 +624,7 @@ class PaymentActivity : AppCompatActivity() {
 
                     tv_deliveryamount.setText(data.order_totals[0].currency + data.order_totals[0].delivery)
                     TOTAL.setText(data.order_totals[0].currency + data.order_totals[0].grand_total)
-
+                    grandtotal=data.order_totals[0].grand_total.toDouble()
                     if (DISCOUNTFOR.equals("orders")){
                         order_coupon.visibility=View.VISIBLE
                         tv_couponamount.setText(data.order_totals[0].currency+CUPONPRICE)

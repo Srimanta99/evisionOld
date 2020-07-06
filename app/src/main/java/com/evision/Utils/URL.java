@@ -55,5 +55,7 @@ public class URL {
     public static final String RATE_PRODUCT=BASE+"user/account/customer_review.php";
     public  static final String SENDTOKEN=BASE+"user/mobileappinfo.php";
 
+    public static final String TOKENVALIDATION="https://apisandbox.mpaycenter.com/api/oauth/token";
+    public static final String INITDEPOSIT="https://apisandbox.mpaycenter.com/api/init-deposit";
 
 }

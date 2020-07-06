@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:custom="http://schemas.android.com/apk/res-auto"
     tools:context=".CartManage.PaymentActivity">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -46,7 +46,7 @@
                     android:textColor="@color/black"
                     android:textSize="18sp" />
 
-               <RadioGroup
+                <RadioGroup
                     android:id="@+id/RG_PAY"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -62,18 +62,26 @@
                         android:id="@+id/RB_store"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginLeft="6dp"
                         android:checked="true"
                         android:text="Pago por ACH " />
 
-             </RadioGroup>
+                    <RadioButton
+                        android:id="@+id/RB_TELRED"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="6dp"
+                        android:text="Sistema Clave"></RadioButton>
+
+                </RadioGroup>
 
                 <LinearLayout
                     android:id="@+id/llcardholdername"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -94,34 +102,34 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="15dp"
                         android:text="@string/cardtype"
-                        android:visibility="gone"
                         android:textColor="@color/black"
-                        android:textSize="18sp" />
+                        android:textSize="18sp"
+                        android:visibility="gone" />
 
-              <EditText
-                  android:id="@+id/tv_cardtype"
-                  android:inputType="none"
-                  android:clickable="true"
-                  android:editable="false"
-                  android:focusable="false"
-                  android:visibility="gone"
-                  android:focusableInTouchMode="true"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:hint="@string/cardtype">
+                    <EditText
+                        android:id="@+id/tv_cardtype"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:editable="false"
+                        android:focusable="false"
+                        android:focusableInTouchMode="true"
+                        android:hint="@string/cardtype"
+                        android:inputType="none"
+                        android:visibility="gone">
 
-              </EditText>
+                    </EditText>
                 </LinearLayout>
 
-               <!-- <com.braintreepayments.cardform.view.CardForm
-                    android:id="@+id/CARD_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
+                <!-- <com.braintreepayments.cardform.view.CardForm
+                     android:id="@+id/CARD_view"
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:layout_marginTop="10dp"
+                     android:layout_marginBottom="10dp"
 
-                    android:visibility="gone"></com.braintreepayments.cardform.view.CardForm>
--->
+                     android:visibility="gone"></com.braintreepayments.cardform.view.CardForm>
+ -->
                 <!--<com.braintreepayments.cardform.view.CardForm-->
                 <!--android:id="@+id/card_form"-->
                 <!--android:layout_width="match_parent"-->
@@ -139,12 +147,12 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.3">
+
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
-                            android:background="@drawable/pay">
-                        </ImageView>
+                            android:background="@drawable/pay"></ImageView>
                     </RelativeLayout>
 
                     <LinearLayout
@@ -152,13 +160,14 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:orientation="vertical">
+
                         <com.wednesday.creditcardedittext.CreditCardEditText
                             android:id="@+id/textview_credit_card"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:hint="@string/card_number"
                             android:inputType="textNoSuggestions"
-                            custom:separator="-"
-                            android:hint = "@string/card_number"/>
+                            custom:separator="-" />
                         <!--<com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/til_card"
                             android:layout_width="match_parent"
@@ -178,35 +187,196 @@
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/til_validdate"
                             android:layout_width="match_parent"
-                            android:layout_marginTop = "@dimen/_3sdp"
-                            android:layout_height="wrap_content">
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_3sdp">
+
                             <com.google.android.material.textfield.TextInputEditText
-                                android:layout_width = "match_parent"
-                                android:layout_height = "wrap_content"
-                                android:id = "@+id/til_expairdate"
-                                android:hint = "@string/card_exp_date"
+                                android:id="@+id/til_expairdate"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
                                 android:focusable="false"
-                                android:paddingLeft="@dimen/_5sdp"
-                                android:inputType = "numberDecimal"/>
+                                android:hint="@string/card_exp_date"
+                                android:inputType="numberDecimal"
+                                android:paddingLeft="@dimen/_5sdp" />
 
                         </com.google.android.material.textfield.TextInputLayout>
+
                         <com.google.android.material.textfield.TextInputLayout
-                            android:layout_width = "match_parent"
-                            android:layout_height = "wrap_content"
-                            android:id = "@+id/cvvnumber"
-                            android:layout_marginTop = "@dimen/_3sdp">
+                            android:id="@+id/cvvnumber"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_3sdp">
+
                             <com.google.android.material.textfield.TextInputEditText
-                                android:layout_width = "match_parent"
-                                android:layout_height = "wrap_content"
-                                android:id = "@+id/cvv"
-                                android:hint = "CVV"
+                                android:id="@+id/cvv"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="CVV"
+                                android:inputType="numberDecimal"
                                 android:maxLength="4"
-                                android:paddingLeft="@dimen/_3sdp"
-                                android:inputType = "numberDecimal"/>
+                                android:paddingLeft="@dimen/_3sdp" />
                         </com.google.android.material.textfield.TextInputLayout>
                     </LinearLayout>
                 </LinearLayout>
 
+                <RelativeLayout
+                    android:id="@+id/ll_telred"
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    android:layout_margin="@dimen/_5sdp"
+                    android:background="@drawable/reantangle_shape_grey_broder"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_width="@dimen/_73sdp"
+                        android:layout_height="@dimen/_65sdp"
+                      android:layout_alignParentRight="true"
+                        android:background="@drawable/clave_payment_logo"></ImageView>
+                   <!-- <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_3sdp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/commerceCode"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Commerce Code"
+                            android:paddingLeft="@dimen/_3sdp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_3sdp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/amount"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Amount"
+                            android:inputType="numberDecimal"
+                            android:paddingLeft="@dimen/_3sdp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_3sdp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/currency"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Currency"
+                            android:paddingLeft="@dimen/_3sdp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_3sdp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/clientId"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="ClientId "
+                            android:paddingLeft="@dimen/_3sdp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_3sdp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/clientSessionId"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="ClientSessionId  "
+                            android:paddingLeft="@dimen/_3sdp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_3sdp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/description"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Description  "
+                            android:paddingLeft="@dimen/_3sdp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_3sdp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/additionalData"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="AdditionalData  "
+                            android:paddingLeft="@dimen/_3sdp" />
+                    </com.google.android.material.textfield.TextInputLayout>-->
+                  <!--  <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_3sdp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/skipRegister"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="SkipRegister "
+                            android:paddingLeft="@dimen/_3sdp" />
+                    </com.google.android.material.textfield.TextInputLayout>-->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/_4sdp"
+                        >
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/mobileno"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Mobile No"
+                            android:inputType="numberDecimal"
+                            android:paddingLeft="@dimen/_4sdp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                   <!-- <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_5sdp"
+                            android:text="SkipRegister?   "
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_11sdp" />
+                        <RadioGroup
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_3sdp"
+                            android:orientation="horizontal">
+                            <RadioButton
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/_5sdp"
+                                android:text="Si"></RadioButton>
+                            <RadioButton
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/_5sdp"
+                                android:text="No"></RadioButton>
+                        </RadioGroup>
+                    </LinearLayout>-->
+
+
+                </RelativeLayout>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -347,6 +517,7 @@
                             android:text="" />
 
                     </LinearLayout>
+
                     <LinearLayout
                         android:id="@+id/ll_delivery"
                         android:layout_width="match_parent"
@@ -367,28 +538,30 @@
                             android:text="" />
 
                     </LinearLayout>
+
                     <LinearLayout
                         android:id="@+id/order_coupon"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:visibility="gone"
-                        android:padding="5dp">
+                        android:padding="5dp"
+                        android:visibility="gone">
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:text="@string/couponappliedoreder"
                             android:textColor="@color/black"
-                            android:textStyle="bold"
-                            android:text="@string/couponappliedoreder"/>
+                            android:textStyle="bold" />
 
-                            <TextView
-                                android:id="@+id/tv_couponamount"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:gravity="right"
-                                android:textStyle="bold"
-                                android:textColor="@color/black"
-                                android:text="" />
+                        <TextView
+                            android:id="@+id/tv_couponamount"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="right"
+                            android:text=""
+                            android:textColor="@color/black"
+                            android:textStyle="bold" />
 
                     </LinearLayout>
 
@@ -412,6 +585,7 @@
 
                     </LinearLayout>
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -423,38 +597,38 @@
                         android:id="@+id/chk_term"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="@dimen/_9sdp"
-                        android:text="@string/accepttermcondition"></CheckBox>
+                        android:text="@string/accepttermcondition"
+                        android:textSize="@dimen/_9sdp"></CheckBox>
 
                     <TextView
                         android:id="@+id/term1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/_5sdp"
-                        android:textSize="@dimen/_8sdp"
+                        android:clickable="true"
                         android:text="@string/term1"
                         android:textColor="@color/colorPrimary"
-                        android:clickable="true" />
+                        android:textSize="@dimen/_8sdp" />
 
                     <TextView
                         android:id="@+id/term2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="@dimen/_8sdp"
                         android:layout_marginLeft="@dimen/_10sdp"
+                        android:clickable="true"
                         android:text="@string/policy"
                         android:textColor="@color/colorPrimary"
-                        android:clickable="true" />
+                        android:textSize="@dimen/_8sdp" />
 
                 </LinearLayout>
 
-               <!-- <CheckBox
-                    android:id="@+id/chk_notification"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/_9sdp"
-                    android:layout_margin="@dimen/_5sdp"
-                    android:text="@string/acceptnotification"></CheckBox>-->
+                <!-- <CheckBox
+                     android:id="@+id/chk_notification"
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:textSize="@dimen/_9sdp"
+                     android:layout_margin="@dimen/_5sdp"
+                     android:text="@string/acceptnotification"></CheckBox>-->
 
             </LinearLayout>
 

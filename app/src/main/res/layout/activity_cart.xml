@@ -181,7 +181,7 @@
                              android:textColor="@color/red"
                             android:textStyle="bold"
                             android:textSize="@dimen/_12sdp"
-                            android:text="Upsell producto"></TextView>
+                            android:text="Productos Recomendados"></TextView>
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/_1sdp"

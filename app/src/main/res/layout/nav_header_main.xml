@@ -6,7 +6,6 @@
     android:gravity="bottom"
     android:orientation="vertical"
     android:background="@color/colorPrimaryDark"
-
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <LinearLayout

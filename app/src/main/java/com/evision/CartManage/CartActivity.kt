@@ -70,6 +70,7 @@ class CartActivity : AppCompatActivity() {
         onHTTP().POSTCALL(URL.GETCARTITEM, params, object : OnHttpResponse {
             override fun onSuccess(response: String) {
                 val data = Gson().fromJson(response, CartResponse::class.java)
+                EvisionLog.E("ResponseForCart", response.toString())
                 if (data.status == 400) {
                     Toast.makeText(this@CartActivity,data.message,Toast.LENGTH_LONG).show()
                     ll_no_value.visibility= View.VISIBLE
@@ -92,6 +93,7 @@ class CartActivity : AppCompatActivity() {
                         adapterCart = AdapterCart(this@CartActivity, data, loader)
                         RECV.adapter = adapterCart
                     }
+
                     adapterCart.notifyDataSetChanged()
                     TXT_qtyno.setText("" + data.cart_count + resources.getString(R.string.qty))
                     Log.e("@@MyValueSubtotal","==>"+data.cart_totals[0].subtotal)
@@ -107,13 +109,13 @@ class CartActivity : AppCompatActivity() {
                     tax.setText(data.cart_totals[0].currency + data.cart_totals[0].tax)
                     TOTAL.setText(data.cart_totals[0].currency + number2digits_grandtotal)
 
-                   /* val upsell_products=data.upsell_products
+                    val upsell_products=data.upsell_products
                     if(upsell_products.size>0){
                         ll_upsellproduct.visibility=View.VISIBLE
                         setadapter(upsell_products)
                     }else{
                         ll_upsellproduct.visibility=View.GONE
-                    }*/
+                    }
                 }
                 loader.dismiss()
             }

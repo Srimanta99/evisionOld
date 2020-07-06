@@ -8,10 +8,12 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.drawable.BitmapDrawable
+import android.net.Uri
 import android.os.Bundle
 import android.os.Message
 
 import android.text.Html
+import android.util.Log
 import android.view.*
 import android.webkit.*
 import android.widget.Button
@@ -78,14 +80,19 @@ class ProductDetailsActivity : AppCompatActivity() {
         params.put("product_id", intent.getStringExtra("pid"))
         EvisionLog.E("##params", params.toString())
         EvisionLog.E("##product_id", intent.getStringExtra("pid"))
-        onHTTP().POSTCALL(URL.GETDETAILS, params, object : OnHttpResponse {
+        onHTTP().POSTCALL(URL.GETDETAILS,params,object : OnHttpResponse {
             override fun onSuccess(response: String) {
                 EvisionLog.E("##ProductDetailsResponse", response)
                 if (response.isEmpty()){
+
+
                     loader.dismiss()
                     Toast.makeText(this@ProductDetailsActivity,"Este producto no está disponible en este momento. Volveremos pronto.",Toast.LENGTH_LONG).show()
                     finish()
+
+
                 }else {
+
                     val objRes=JSONObject(response)
 //                val details = Gson().fromJson(response, PDetails::class.java)
                     if (objRes.optInt("status") == 200) {
@@ -122,8 +129,29 @@ class ProductDetailsActivity : AppCompatActivity() {
                         // modified
                         WebV.webViewClient = object : WebViewClient() {
                             override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
-                                view?.loadUrl(url)
-                                return true
+                              //  view?.loadUrl(url)
+                                 var overrideUrlLoading = false;
+                                Log.e("tag","url overrride url  = "+ url);
+
+                                // https://web.whatsapp.com/send?phone=50761644504
+
+                                if(url!!.startsWith("https://web.whatsapp.com") || url.startsWith("whatsapp:") || url.startsWith("web:")) {
+                                  /* val intent =  Intent(Intent.ACTION_VIEW);
+                                   intent.setData(Uri.parse(url));
+                                   startActivity(intent);*/
+                                    val intent = Intent(Intent.ACTION_VIEW)
+                                    intent.data = Uri.parse("http://api.whatsapp.com/send?phone=+507-61644504")
+                                    startActivity(intent)
+                                     return true;
+                                 }else
+                                    view?.loadUrl(url)
+
+                                return false
+                            }
+
+                            override fun onPageFinished(view: WebView?, url: String?) {
+                                super.onPageFinished(view, url)
+                                Log.e("tag","url overrride url  = "+ url);
                             }
 
                         }
@@ -135,7 +163,7 @@ class ProductDetailsActivity : AppCompatActivity() {
                         WebV.getSettings().setSupportMultipleWindows(true)
                         WebV.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
 
-                        WebV.setWebViewClient(WebViewClient())
+                      //  WebV.setWebViewClient(WebViewClient())
                         WebV.addJavascriptInterface(object : Any() {
                             @JavascriptInterface           // For API 17+
                             fun performClick() {
@@ -183,7 +211,6 @@ class ProductDetailsActivity : AppCompatActivity() {
                         val settings = WebV2.getSettings()
                         settings.setDefaultTextEncodingName("utf-8");
                         WebV2.settings.javaScriptEnabled = true
-
                        // WebV2.settings.setAppCacheEnabled(true)
                        // WebV2.webChromeClient = object : WebChromeClient() {}
 //                    WebV2.loadUrl("http://dev.indigitalsoft.com/evision/extradesc.php?brand=lg&model=32lk540bpda")
@@ -192,8 +219,7 @@ class ProductDetailsActivity : AppCompatActivity() {
                         WebV2.loadUrl(objRes.optJSONArray("product_view").optJSONObject(0).optString("extra_html_description"))
                        // WebV2.loadData(objRes.optJSONArray("product_view").optJSONObject(0).optString("extra_html_description"),"text/html; charset=utf-8","UTF-8")
 
-
-//                    TXT_Pname.setText(details.product_view.get(0).product_name)
+//                      TXT_Pname.setText(details.product_view.get(0).product_name)
                         TXT_Pname.setText(objRes.optJSONArray("product_view").optJSONObject(0).optString("product_name"))
 //                    TXT_ModelNo.setText(details.product_view.get(0).modelo)
 //                    sahrelink = details.product_view[0].product_ink
@@ -207,6 +233,7 @@ class ProductDetailsActivity : AppCompatActivity() {
                         modelno = objRes.optJSONArray("product_view").optJSONObject(0).optString("modelo")
                         brandname=objRes.optJSONArray("product_view").optJSONObject(0).optString("brand")
 //                    val spclprice = details.product_view.get(0).special_price.toDouble()
+
 
                       if(!objRes.optJSONArray("product_view").optJSONObject(0).optString("price").toString().equals("0.00")){
                             val spclprice = objRes.optJSONArray("product_view").optJSONObject(0).optString("special_price").toDouble()
