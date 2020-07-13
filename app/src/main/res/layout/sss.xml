@@ -37,7 +37,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="10dp">
+                android:padding="6dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -50,6 +50,7 @@
                     android:id="@+id/RG_PAY"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+
                     android:orientation="horizontal">
 
                     <RadioButton
@@ -62,16 +63,16 @@
                         android:id="@+id/RB_store"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="6dp"
+                        android:layout_marginLeft="@dimen/_3sdp"
                         android:checked="true"
-                        android:text="Pago por ACH " />
+                        android:text="Pago por ACH" />
 
                     <RadioButton
                         android:id="@+id/RB_TELRED"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="6dp"
-                        android:text="Sistema Clave"></RadioButton>
+                        android:layout_marginLeft="@dimen/_3sdp"
+                        android:text="Tarjeta Clave"></RadioButton>
 
                 </RadioGroup>
 

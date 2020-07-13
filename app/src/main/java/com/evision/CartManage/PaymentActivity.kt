@@ -36,7 +36,6 @@ import com.google.gson.JsonParser
 import com.wecompli.network.Retrofit
 import com.wednesday.creditcardedittext.CreditCardEditText
 import kotlinx.android.synthetic.main.sss.*
-import okhttp3.ResponseBody
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -261,6 +260,22 @@ class PaymentActivity : AppCompatActivity() {
             var obj: JSONObject = paramObject
             var jsonParser: JsonParser = JsonParser()
             var gsonObject: JsonObject = jsonParser.parse(obj.toString()) as JsonObject;
+            EvisionLog.D("## DATA 2ndApi", gsonObject.toString())
+
+            val params = HashMap<String, Any>()
+            params.put("commerceCode", "4134bd3c-0167-4e57-ba7d-6e6af15ee35e")
+            params.put("amount", grandtotal!!)
+            params.put("order_id",order_id)
+            params.put("currency", "USD")
+            params.put("clientId", "1234")
+            params.put("clientSessionId", random_int)
+            params.put("description", "payment test")
+            params.put("skipRegister", true)
+            params.put("contractNumber",customerAddress.telephone)
+            params.put("returnUrl",retrrnurl)
+            params.put("skipregister",true)
+            params.put("itbms",tex)
+
             val callApi = apiInterface.callApiinitdeposit("application/json", authToken,  gsonObject!!)
             callApi.enqueue(object : Callback<InitDepositResponse>{
                 override fun onResponse(call: Call<InitDepositResponse>, response: Response<InitDepositResponse>) {
@@ -271,13 +286,19 @@ class PaymentActivity : AppCompatActivity() {
                     //val responseobj = JSONObject(responseString) as JSONObject
                     //val responseobj = jsonParser.parse(response.body().toString()) as JsonObject
                     val url:String=response!!.body()!!.url
+                    val sessionId=response!!.body()!!.sessionId
+                    val clientSessionId=response.body()!!.clientSessionId
+                   // callApiforLogprint(url,sessionId,clientSessionId,gsonObject.toString())
+
+                    callApiforsendsessionis(url,sessionId,clientSessionId,params)
+
                   //  val clientSessionId=responseobj.getString("clientSessionId")
-                    loader.dismiss()
+                    //loader.dismiss()
                     //val intent=Intent(this@PaymentActivity,PaymentRedirectUrlActivity::class.java)
                     //intent!!.putExtra("url", url!!)
                     //startActivity(intent)
-                    startActivity(Intent(this@PaymentActivity, PaymentRedirectUrlActivity::class.java).putExtra("url", url!!))
-                     finish()
+                  //  startActivity(Intent(this@PaymentActivity, PaymentRedirectUrlActivity::class.java).putExtra("url", url!!))
+                  //   finish()
                 }
 
                 override fun onFailure(call: Call<InitDepositResponse>, t: Throwable) {
@@ -288,6 +309,51 @@ class PaymentActivity : AppCompatActivity() {
         }catch (e:Exception){
             e.printStackTrace()
         }
+
+    }
+
+    private fun callApiforsendsessionis(url: String, paymentgatewaysessionId: String, oursessionId: String, paramsmap: HashMap<String, Any>) {
+        val params = HashMap<String, Any>()
+        params.put("our_session_id", oursessionId)
+        params.put("paymentgateway_session_id", paymentgatewaysessionId)
+        params.put("order_id",order_id)
+
+        onHTTP().POSTCALL(URL.SECONDAPI, paramsmap, object : OnHttpResponse {
+            override fun onStart() {
+
+            }
+
+            override fun onSuccess(response: String) {
+
+                EvisionLog.D("## SECOND RESPONSE-", response)
+            }
+
+            override fun onError(error: String) {
+
+            }
+        })
+
+        onHTTP().POSTCALL(URL.SETSESSION, params, object : OnHttpResponse {
+            override fun onStart() {
+                if (!loader.isShowing)
+                    loader.show()
+                  }
+
+            override fun onSuccess(response: String) {
+                val status = JSONObject(response).optString("status")
+                EvisionLog.D("## SESSIOn RESPONSE-", response)
+                if (status.equals("success")) {
+                    startActivity(Intent(this@PaymentActivity, PaymentRedirectUrlActivity::class.java).putExtra("url", url!!))
+                    finish()
+                }else
+                    Toast.makeText(this@PaymentActivity,"Something Wrong",Toast.LENGTH_LONG).show()
+
+            }
+
+            override fun onError(error: String) {
+                loader.dismiss()
+            }
+        })
 
     }
 
@@ -477,7 +543,7 @@ class PaymentActivity : AppCompatActivity() {
         if (llcard_view.visibility == View.VISIBLE)
            params.put("payment_method","online")
         else if(ll_telred.visibility==View.VISIBLE)
-            params.put("payment_method","online")
+            params.put("payment_method","online_api")
         else
             params.put("payment_method","bank_transfer")
 

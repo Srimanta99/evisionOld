@@ -29,7 +29,7 @@ interface ApiInterface {
 
    // @Headers("Content-Type: application/json")
     @POST("/api/init-deposit")
-    fun callApiinitdeposit(@Header("Content-Type") token:String,@Header("Authorization") site_id:String, @Body body: JsonObject): Call<InitDepositResponse>
+    fun callApiinitdeposit(@Header("Content-Type") type:String,@Header("Authorization") token:String, @Body body: JsonObject): Call<InitDepositResponse>
 
 
 }

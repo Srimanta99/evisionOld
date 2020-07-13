@@ -57,5 +57,7 @@ public class URL {
 
     public static final String TOKENVALIDATION="https://apisandbox.mpaycenter.com/api/oauth/token";
     public static final String INITDEPOSIT="https://apisandbox.mpaycenter.com/api/init-deposit";
+    public static final String SETSESSION="https://www.evisionstore.com/api/checkout/setsessionids.php";
+    public static final String SECONDAPI="https://www.evisionstore.com/api/checkout/second_api_requests.php";
 
 }
