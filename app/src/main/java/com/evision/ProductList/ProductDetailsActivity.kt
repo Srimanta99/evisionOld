@@ -525,7 +525,7 @@ class ProductDetailsActivity : AppCompatActivity() {
         }
         btn_no.setOnClickListener {
             alertDialog.dismiss()
-            startActivity(Intent(this, CheckOutAddress::class.java))
+            startActivity(Intent(this, CartActivity::class.java))
 
         }
         img_cart_cross.setOnClickListener {

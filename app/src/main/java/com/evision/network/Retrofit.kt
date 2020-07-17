@@ -22,7 +22,7 @@ object Retrofit {
 
             if (retrofit == null) {
                 retrofit = retrofit2.Retrofit.Builder()
-                    .baseUrl("https://apisandbox.mpaycenter.com")
+                    .baseUrl("https://apisandboxqa.mpaycenter.com/")
                     .client(okHttpClient)
                     .addConverterFactory(ScalarsConverterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())

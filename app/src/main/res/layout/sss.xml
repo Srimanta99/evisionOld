@@ -37,14 +37,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="6dp">
+                android:padding="@dimen/_7sdp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/chose_payment_method"
                     android:textColor="@color/black"
-                    android:textSize="18sp" />
+                    android:textSize="@dimen/_16sdp"/>
 
                 <RadioGroup
                     android:id="@+id/RG_PAY"
@@ -57,21 +57,24 @@
                         android:id="@+id/RB_CARD"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textSize="@dimen/_10sdp"
                         android:text="Credit/Debit Card" />
 
                     <RadioButton
                         android:id="@+id/RB_store"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/_3sdp"
+                        android:layout_marginLeft="@dimen/_2sdp"
                         android:checked="true"
+                        android:textSize="@dimen/_10sdp"
                         android:text="Pago por ACH" />
 
                     <RadioButton
                         android:id="@+id/RB_TELRED"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/_3sdp"
+                        android:layout_marginLeft="@dimen/_2sdp"
+                        android:textSize="@dimen/_10sdp"
                         android:text="Tarjeta Clave"></RadioButton>
 
                 </RadioGroup>
@@ -385,12 +388,13 @@
                     android:layout_marginTop="20dp"
                     android:text="@string/applycoupon"
                     android:textColor="@color/black"
-                    android:textSize="18sp" />
+                    android:textSize="@dimen/_14sdp" />
 
                 <EditText
                     android:id="@+id/EDX_COUPON"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textSize="@dimen/_12sdp"
                     android:hint="@string/applycoupon" />
 
                 <Button
@@ -399,6 +403,7 @@
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/red"
                     android:text="@string/apply"
+                    android:textSize="@dimen/_11sdp"
                     android:textColor="@color/white" />
 
 

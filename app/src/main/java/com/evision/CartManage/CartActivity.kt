@@ -40,7 +40,7 @@ class CartActivity : AppCompatActivity() {
         toolbar.setTitleTextColor(Color.WHITE)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_white_back)
-         RECV=findViewById<RecyclerView>(R.id.RECV)
+        RECV=findViewById<RecyclerView>(R.id.RECV)
         RECV.layoutManager = LinearLayoutManager(this)
 
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);

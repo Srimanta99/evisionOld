@@ -195,6 +195,7 @@ class SearchFragment : DialogFragment() {
                     if (listdata.status == 200) {
                        // EDX_key.isEnabled=true
                         prod_list.clear()
+                        adapter.notifyDataSetChanged()
                         prod_list= listdata.search_data as ArrayList<Product>;
                         TXT_EMTY.visibility = View.GONE
                         if (listdata.search_data.size > 7) {

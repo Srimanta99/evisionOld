@@ -55,8 +55,8 @@ public class URL {
     public static final String RATE_PRODUCT=BASE+"user/account/customer_review.php";
     public  static final String SENDTOKEN=BASE+"user/mobileappinfo.php";
 
-    public static final String TOKENVALIDATION="https://apisandbox.mpaycenter.com/api/oauth/token";
-    public static final String INITDEPOSIT="https://apisandbox.mpaycenter.com/api/init-deposit";
+    public static final String TOKENVALIDATION="https://apisandboxqa.mpaycenter.com/api/oauth/token";
+    public static final String INITDEPOSIT="https://apisandboxqa.mpaycenter.com/api/init-deposit";
     public static final String SETSESSION="https://www.evisionstore.com/api/checkout/setsessionids.php";
     public static final String SECONDAPI="https://www.evisionstore.com/api/checkout/second_api_requests.php";
 

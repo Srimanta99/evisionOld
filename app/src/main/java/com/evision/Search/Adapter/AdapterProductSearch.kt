@@ -69,13 +69,13 @@ class AdapterProductSearch(mContext: Context, list: List<Product>) : RecyclerVie
         p0.TXT_name.setText(item.productName)
 
 
-        p0.TXT_Price.setText(item.currency + " " + item.price)
+        p0.TXT_Price.setText(item.currency + " " + item.price.toString())
+        p0.SPECIAL_Price.setText("")
         val spclprice = item.specialPrice.toDouble()
         if (spclprice > 0.0) {
-
-            val newprice = "<b>" + item.currency + item.price + "</b>"
+            p0.TXT_Price.setText(item.currency + " " + spclprice)
+            val newprice = "<b>" + item.currency + item.price.toString() + "</b>"
             p0.SPECIAL_Price.setText(Html.fromHtml(newprice))
-            p0.TXT_Price.setText(item.currency + " " + item.specialPrice)
             p0.SPECIAL_Price.paintFlags = p0.TXT_Price.getPaintFlags() or Paint.STRIKE_THRU_TEXT_FLAG
         }
 
@@ -95,8 +95,8 @@ class AdapterProductSearch(mContext: Context, list: List<Product>) : RecyclerVie
             p0.IMG_avilable.visibility = View.INVISIBLE
 //            p0.TXT_Add_cart.isClickable = false
         }
-        if(item.price.equals("0.00"))
-           p0.TXT_Price.visibility=View.INVISIBLE
+       // if(item.price.equals("0.00"))
+         //  p0.TXT_Price.visibility=View.INVISIBLE
         /*
              p0.TXT_Add_cart.setOnClickListener {
 

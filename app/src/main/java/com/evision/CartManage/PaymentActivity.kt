@@ -4,6 +4,7 @@ import ApiInterface
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -15,6 +16,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
@@ -72,6 +74,7 @@ class PaymentActivity : AppCompatActivity() {
     var order_id:String=""
 
     var cardtypelist= arrayOf("American express","uuuyuqyqeryqwury","whqudhoqwuyroi")
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.sss)
@@ -211,7 +214,7 @@ class PaymentActivity : AppCompatActivity() {
     }
 
     private fun calltokenvalidationApi() {
-       // loader.show()
+       // loader.show()  Ak#~U)7N{+y&  evision_testing 1, 4134bd3c-0167-4e57-ba7d-6e6af15ee35e
         val params = HashMap<String, Any>()
         params.put("client_username", "evision_testing")
         params.put("client_secret", "Ak#~U)7N{+y&")
