@@ -72,6 +72,7 @@ class PaymentActivity : AppCompatActivity() {
     var selectpaymentoption:Boolean=false
     var grandtotal:Double=0.0
     var order_id:String=""
+    var isallowbacc_payment:Boolean=false
 
     var cardtypelist= arrayOf("American express","uuuyuqyqeryqwury","whqudhoqwuyroi")
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
@@ -143,6 +144,9 @@ class PaymentActivity : AppCompatActivity() {
                     llcard_view.visibility=View.VISIBLE
                     ll_telred.visibility=View.GONE
                     selectpaymentoption=true
+                    llyappy.visibility=View.GONE
+                    llcardomatic_view.visibility=View.GONE
+
                 }
                 R.id.RB_store -> {
                    // cardv.visibility = View.GONE
@@ -150,11 +154,30 @@ class PaymentActivity : AppCompatActivity() {
                     llcard_view.visibility=View.GONE
                     ll_telred.visibility=View.GONE
                     selectpaymentoption=false
+                    llyappy.visibility=View.GONE
+                    llcardomatic_view.visibility=View.GONE
+
                 }
                 R.id.RB_TELRED->{
                     llcardholdername.visibility=View.GONE
                     llcard_view.visibility=View.GONE
                     ll_telred.visibility=View.VISIBLE
+                    llyappy.visibility=View.GONE
+                    llcardomatic_view.visibility=View.GONE
+                }
+                R.id.RB_yappy->{
+                    llcardholdername.visibility=View.GONE
+                    llcard_view.visibility=View.GONE
+                    ll_telred.visibility=View.GONE
+                    llyappy.visibility=View.VISIBLE
+                    llcardomatic_view.visibility=View.GONE
+                }
+                R.id.RB_cardomatic->{
+                    llcardholdername.visibility=View.GONE
+                    llcard_view.visibility=View.GONE
+                    ll_telred.visibility=View.GONE
+                    llyappy.visibility=View.GONE
+                    llcardomatic_view.visibility=View.VISIBLE
                 }
             }
         }
@@ -171,6 +194,8 @@ class PaymentActivity : AppCompatActivity() {
         }*/
 
         loadData()
+
+
         RECV.layoutManager = LinearLayoutManager(this)
 
         EDX_apply.setOnClickListener {
@@ -211,13 +236,26 @@ class PaymentActivity : AppCompatActivity() {
 
         }
 
+        til_cardomatic_expairdate.setOnClickListener {
+            hideSoftKeyboard(this)
+            showmonthyeardialogcradomatic();
+        }
+
     }
 
     private fun calltokenvalidationApi() {
        // loader.show()  Ak#~U)7N{+y&  evision_testing 1, 4134bd3c-0167-4e57-ba7d-6e6af15ee35e
+
+        /*URL:https://apitelered.mpaycenter.com/mpay-telered-orchestrator/
+        user: evision_prod
+        password:
+        t!=JyenBew8A9cef
+        commerce_code: 4134bd3c-0167-4e57-ba7d-6e6af15ee35e
+        type: 1*/
+
         val params = HashMap<String, Any>()
-        params.put("client_username", "evision_testing")
-        params.put("client_secret", "Ak#~U)7N{+y&")
+        params.put("client_username", "evision_prod")
+        params.put("client_secret", "t!=JyenBew8A9cef")
         params.put("client_type","1")
         onHTTP().POSTCALL(URL.TOKENVALIDATION, params, object : OnHttpResponse {
             override fun onStart() {
@@ -227,8 +265,14 @@ class PaymentActivity : AppCompatActivity() {
 
             override fun onSuccess(response: String) {
                 EvisionLog.D("## Pay RESPONSE-", response)
-                val auth_token = JSONObject(response).optString("authorization_token")
-                callApiforinitdeposite(auth_token)
+                loader.dismiss()
+                try {
+                    val auth_token = JSONObject(response).optString("authorization_token")
+                    callApiforinitdeposite(auth_token)
+                }catch (e:Exception){
+                    e.printStackTrace()
+                }
+
             }
 
             override fun onError(error: String) {
@@ -396,7 +440,36 @@ class PaymentActivity : AppCompatActivity() {
         return true
 
     }
+    private fun showmonthyeardialogcradomatic() {
+        val calendar = Calendar.getInstance()
+        val yearSelected: Int
+        val monthSelected: Int
 
+//Set default values
+        // val calendar = Calendar.getInstance()
+        yearSelected = calendar.get(Calendar.YEAR)
+        monthSelected = calendar.get(Calendar.MONTH)
+        calendar.clear()
+        calendar.set(yearSelected, monthSelected, 1) // Set minimum date to show in dialog
+        val minDate = calendar.getTimeInMillis() // Get milliseconds of the modified date
+
+        calendar.clear()
+        calendar.set(2048, 11, 31) // Set maximum date to show in dialog
+        val maxDate = calendar.getTimeInMillis() // Get milliseconds of the modified date
+
+// Create instance with date ranges values
+        val dialogFragment = MonthYearPickerDialogFragment
+                .getInstance(monthSelected, yearSelected, minDate, maxDate)
+
+        dialogFragment.show(supportFragmentManager, null)
+
+        dialogFragment.setOnDateSetListener { year, monthOfYear ->
+            expirationMonth=formatnumber(monthOfYear+1)
+            expirationYear=year.toString()
+            til_cardomatic_expairdate.setText(formatnumber(monthOfYear+1)+"/"+year.toString())
+            // do something
+        }
+    }
     private fun showmonthyeardialog() {
         val calendar = Calendar.getInstance()
         val yearSelected: Int
@@ -490,7 +563,7 @@ class PaymentActivity : AppCompatActivity() {
                 textview_credit_card!!.requestFocus()
                 return
             }
-            if (textview_credit_card!!.creditCardNumber.length<16) {
+            if (textview_credit_card!!.length()<16) {
                 textview_credit_card!!.requestFocus()
                 return
             }
@@ -510,6 +583,27 @@ class PaymentActivity : AppCompatActivity() {
                  cardv.cvvEditText.requestFocus()
                  return
              }*/
+        }else if(llcardomatic_view.visibility==View.VISIBLE){
+            if (tv_cardomatic_credit_card!!.text.isNullOrEmpty()) {
+                tv_cardomatic_credit_card!!.requestFocus()
+                return
+            }
+            if (tv_cardomatic_credit_card!!.length()<16) {
+                tv_cardomatic_credit_card!!.requestFocus()
+                return
+            }
+
+            if (til_cardomatic_expairdate.text.isNullOrEmpty()) {
+                til_cardomatic_expairdate.requestFocus()
+                return
+            }
+            if (cardomatic_cvv.visibility==View.VISIBLE) {
+                if (cardomatic_cvv.text.toString().equals("")){
+                    cardomatic_cvv.requestFocus()
+                    return
+                }
+
+            }
         }
 
         val params = HashMap<String, Any>()
@@ -543,12 +637,25 @@ class PaymentActivity : AppCompatActivity() {
         params.put("discount_amount",CUPONPRICE)
       //  params.put("delivery_amount",delivery_cost!!)
 
-        if (llcard_view.visibility == View.VISIBLE)
-           params.put("payment_method","online")
-        else if(ll_telred.visibility==View.VISIBLE)
-            params.put("payment_method","online_api")
-        else
-            params.put("payment_method","bank_transfer")
+        if (llcard_view.visibility == View.VISIBLE) {
+            params.put("payment_method", "online")
+            params.put("ccnumber", textview_credit_card!!.creditCardNumber.toString())
+        }
+        else if(ll_telred.visibility==View.VISIBLE) {
+            params.put("payment_method", "online_api")
+            params.put("ccnumber", "")
+        }else if (llyappy.visibility==View.VISIBLE){
+            params.put("payment_method","yappy")
+            params.put("ccnumber","")
+        }
+        else if(llcardomatic_view.visibility==View.VISIBLE){
+            params.put("payment_method","online_bac")
+            params.put("ccnumber",tv_cardomatic_credit_card.creditCardNumber.toString())
+        }
+        else {
+            params.put("payment_method", "bank_transfer")
+            params.put("ccnumber", "")
+        }
 
 
         EvisionLog.D("## URL-", URL.ORDERPALCEINSTORE)
@@ -567,7 +674,7 @@ class PaymentActivity : AppCompatActivity() {
                         logindata!!.cartCount = 0
                         ShareData(this@PaymentActivity).SetUserData(Gson().toJson(logindata).toString())
                         /***** ***************/
-                        val URL = URL.BASE + "checkout/payment.php?order_id=" + orderID + "&ccnumber="+textview_credit_card!!.creditCardNumber.toString()+"&ccexp="+expirationMonth+expirationYear+"&cvv="+cvv.text.toString()
+                        val URL = URL.BASE + "checkout/payment.php?order_id=" + orderID + "&ccnumber="+textview_credit_card!!.creditCardNumber.toString()+"&ccexp="+expirationMonth+expirationYear+"&cvv="+cvv.text.toString()+"&payment_method=online"
                         startActivity(Intent(this@PaymentActivity, PaymentCeditCardActivity::class.java).putExtra("loaderURL", URL))
                        // finish()
                       //  val browserIntent:Intent =  Intent(Intent.ACTION_VIEW, Uri.parse(URL))
@@ -586,13 +693,31 @@ class PaymentActivity : AppCompatActivity() {
                         intents.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
                         this@PaymentActivity.startActivity(intents)*/
                         finish()
-                    } else if(ll_telred.visibility==View.VISIBLE){
+                    } else if(llcardomatic_view.visibility==View.VISIBLE){
+                        var logindata = ShareData(this@PaymentActivity).getUser()
+                        logindata!!.cartCount = 0
+                        ShareData(this@PaymentActivity).SetUserData(Gson().toJson(logindata).toString())
+                        /***** ***************/
+                        val URL = URL.BASE + "checkout/payment.php?order_id=" + orderID + "&ccnumber="+tv_cardomatic_credit_card!!.creditCardNumber.toString()+"&ccexp="+expirationMonth+expirationYear+"&cvv="+cardomatic_cvv.text.toString()+"&payment_method=online_bac"
+                        startActivity(Intent(this@PaymentActivity, PaymentCeditCardActivity::class.java).putExtra("loaderURL", URL))
+                        finish()
+                    }
+                    else if(ll_telred.visibility==View.VISIBLE){
                         var logindata = ShareData(this@PaymentActivity).getUser()
                         logindata!!.cartCount = 0
                         ShareData(this@PaymentActivity).SetUserData(Gson().toJson(logindata).toString())
                         calltokenvalidationApi()
                     }
-
+                    else if(llyappy.visibility==View.VISIBLE){
+                        var logindata = ShareData(this@PaymentActivity).getUser()
+                        logindata!!.cartCount = 0
+                        ShareData(this@PaymentActivity).SetUserData(Gson().toJson(logindata).toString())
+                        val inte = Intent(this@PaymentActivity, OrderSucessActivityYappyPayment::class.java).putExtra("response", response)
+                        inte.putExtra("callurl", false)
+                        inte.putExtra("data", response)
+                        startActivity(inte)
+                        finish()
+                    }
                     else {
                         var logindata = ShareData(this@PaymentActivity).getUser()
                         logindata!!.cartCount = 0
@@ -682,6 +807,7 @@ class PaymentActivity : AppCompatActivity() {
                         adapterCart = AdapterCartCheckout(this@PaymentActivity, data.order_review, loader)
                         RECV.adapter = adapterCart
                    // }
+                    isallowbacc_payment=data.is_allow_bac_credomatic
                     adapterCart.notifyDataSetChanged()
                     ordertotal = data.order_totals[0]
 //                    TXT_qtyno.setText("" + data.cart_count + "Qty")
@@ -694,6 +820,10 @@ class PaymentActivity : AppCompatActivity() {
                     tv_deliveryamount.setText(data.order_totals[0].currency + data.order_totals[0].delivery)
                     TOTAL.setText(data.order_totals[0].currency + data.order_totals[0].grand_total)
                     grandtotal=data.order_totals[0].grand_total.toDouble()
+                    if (isallowbacc_payment)
+                        RB_cardomatic.visibility=View.VISIBLE
+                    else
+                        RB_cardomatic.visibility=View.GONE
                     if (DISCOUNTFOR.equals("orders")){
                         order_coupon.visibility=View.VISIBLE
                         tv_couponamount.setText(data.order_totals[0].currency+CUPONPRICE)

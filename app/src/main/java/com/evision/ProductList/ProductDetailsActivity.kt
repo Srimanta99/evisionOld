@@ -11,7 +11,6 @@ import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.os.Message
-
 import android.text.Html
 import android.util.Log
 import android.view.*
@@ -21,22 +20,21 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.evision.CartManage.CartActivity
 import com.evision.Login_Registration.LoginActivity
+import com.evision.ProductList.Adapter.ProductMultipuleImageAdapter
 import com.evision.R
 import com.evision.Utils.*
+import com.evision.mainpage.MainActivity
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_product_details.*
 import org.json.JSONObject
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.evision.CartManage.CheckOutAddress
-import com.evision.ProductList.Adapter.ProductMultipuleImageAdapter
-import com.evision.mainpage.MainActivity
+import kotlin.math.round
 
 
 class ProductDetailsActivity : AppCompatActivity() {
@@ -97,6 +95,9 @@ class ProductDetailsActivity : AppCompatActivity() {
 //                val details = Gson().fromJson(response, PDetails::class.java)
                     if (objRes.optInt("status") == 200) {
 //                    toolbar.setTitle(details.product_view.get(0).category_name)
+                        //bac payment
+
+
                         toolbar.setTitle(objRes.optJSONArray("product_view").optJSONObject(0).optString("category_name"))
 //                    Glide.with(this@ProductDetailsActivity).load(details.product_view.get(0).product_image).apply(RequestOptions().placeholder(R.drawable.ic_placeholder)).into(IMG_Product)
                         Glide.with(this@ProductDetailsActivity).load(objRes.optJSONArray("product_view").optJSONObject(0).optString("product_image")).apply(RequestOptions().placeholder(R.drawable.ic_placeholder)).into(IMG_Product)
@@ -268,6 +269,19 @@ class ProductDetailsActivity : AppCompatActivity() {
                         }
 
                         loader.dismiss()
+                    }
+                    val is_allowed_bac_credomatic=objRes.optJSONArray("product_view").optJSONObject(0).optBoolean("is_allowed_bac_credomatic")
+                    if(is_allowed_bac_credomatic){
+                        var  prodamount:Float=TXT_Price!!.text.toString().substring(1).toFloat()
+                        var tax_amount=prodamount*7/100
+                        var product_amount_with_tax=tax_amount+prodamount
+                      //  val df = DecimalFormat("0.00")
+                        var per_month_price= (product_amount_with_tax/12)
+
+                        ll_bac.visibility=View.VISIBLE
+                        tv_attentation.setText("12 cuotas de "+objRes.optJSONArray("product_view").optJSONObject(0).optString("currency")+String.format("%.2f",per_month_price).replace(",",".")+" cada una")
+                    }else{
+                        ll_bac.visibility=View.GONE
                     }
                 }
               //  loader.dismiss()

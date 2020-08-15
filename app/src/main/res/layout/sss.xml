@@ -51,7 +51,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
                     <RadioButton
                         android:id="@+id/RB_CARD"
@@ -76,7 +76,20 @@
                         android:layout_marginLeft="@dimen/_2sdp"
                         android:textSize="@dimen/_10sdp"
                         android:text="Tarjeta Clave"></RadioButton>
-
+                    <RadioButton
+                        android:id="@+id/RB_yappy"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_2sdp"
+                        android:textSize="@dimen/_10sdp"
+                        android:text="Yappy"></RadioButton>
+                    <RadioButton
+                        android:id="@+id/RB_cardomatic"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_2sdp"
+                        android:textSize="@dimen/_10sdp"
+                        android:text="Tasa 0% de BAC Credomatic"></RadioButton>
                 </RadioGroup>
 
                 <LinearLayout
@@ -86,18 +99,19 @@
                     android:orientation="vertical"
                     android:visibility="gone">
 
-                    <TextView
+                  <!--  <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
                         android:text="@string/cardholdername"
                         android:textColor="@color/black"
-                        android:textSize="18sp" />
+                        android:textSize="18sp" />-->
 
                     <EditText
                         android:id="@+id/CARD_HOLDERNAME"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:paddingLeft="@dimen/_7sdp"
                         android:hint="@string/cardholdername" />
 
                     <TextView
@@ -138,19 +152,43 @@
                 <!--android:id="@+id/card_form"-->
                 <!--android:layout_width="match_parent"-->
                 <!--android:layout_height="wrap_content" />-->
-
                 <LinearLayout
                     android:id="@+id/llcard_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/light_grey"
-                    android:visibility="gone">
+                    android:background="#e7e7e7"
+                    android:visibility="gone"
+                    android:layout_margin="@dimen/_5sdp"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#e7e7e7"
+                        android:gravity="center">
+                        <ImageView
+                            android:layout_width="@dimen/_200sdp"
+                            android:layout_height="@dimen/_37sdp"
+                            android:layout_marginTop="@dimen/_15sdp"
+                            android:layout_marginBottom="@dimen/_12sdp"
+                            android:padding="@dimen/_12sdp"
+                            android:background="@drawable/cardview"></ImageView>
+                      <!--  <ImageView
+                            android:layout_width="@dimen/_90sdp"
+                            android:layout_height="@dimen/_45sdp"
+                            android:layout_margin="@dimen/_7sdp"
+                            android:src="@drawable/mastercard_"></ImageView>
+-->
 
+                    </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
                     <RelativeLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="0.3">
+                        android:layout_weight="0.22">
 
                         <ImageView
                             android:layout_width="wrap_content"
@@ -222,6 +260,145 @@
                         </com.google.android.material.textfield.TextInputLayout>
                     </LinearLayout>
                 </LinearLayout>
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/llcardomatic_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/light_grey"
+                    android:visibility="gone"
+                    android:layout_margin="@dimen/_5sdp"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#e7e7e7"
+                        android:gravity="center">
+                        <ImageView
+                            android:layout_width="@dimen/_200sdp"
+                            android:layout_height="@dimen/_37sdp"
+                            android:layout_marginTop="@dimen/_15sdp"
+                            android:layout_marginBottom="@dimen/_12sdp"
+                            android:padding="@dimen/_12sdp"
+                            android:background="@drawable/cardview"></ImageView>
+                        <!--  <ImageView
+                              android:layout_width="@dimen/_90sdp"
+                              android:layout_height="@dimen/_45sdp"
+                              android:layout_margin="@dimen/_7sdp"
+                              android:src="@drawable/mastercard_"></ImageView>
+  -->
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.42">
+
+                            <ImageView
+                                android:layout_width="@dimen/_110sdp"
+                                android:layout_height="@dimen/_46sdp"
+                                android:layout_centerInParent="true"
+                                android:layout_margin="@dimen/_5sdp"
+                                android:background="@drawable/baclogo"></ImageView>
+                        </RelativeLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <com.wednesday.creditcardedittext.CreditCardEditText
+                                android:id="@+id/tv_cardomatic_credit_card"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/card_number"
+                                android:inputType="textNoSuggestions"
+                                custom:separator="-" />
+                            <!--<com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/til_card"
+                                android:layout_width="match_parent"
+                                android:layout_marginTop = "@dimen/_3sdp"
+                                android:layout_height="wrap_content">
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:layout_width = "match_parent"
+                                    android:layout_height = "wrap_content"
+                                    android:id = "@+id/til_card_no"
+                                    android:hint = "@string/card_number"
+                                    android:digits="1234567890"
+                                    android:maxLength="22"
+                                    android:paddingLeft="@dimen/_5sdp"
+                                    android:inputType = "numberDecimal"/>
+
+                            </com.google.android.material.textfield.TextInputLayout>-->
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/til_cardomatic_validdate"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/_3sdp">
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/til_cardomatic_expairdate"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:focusable="false"
+                                    android:hint="@string/card_exp_date"
+                                    android:inputType="numberDecimal"
+                                    android:paddingLeft="@dimen/_5sdp" />
+
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/cardomatic_cvvnumber"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/_3sdp">
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/cardomatic_cvv"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:hint="CVV"
+                                    android:inputType="numberDecimal"
+                                    android:maxLength="4"
+                                    android:paddingLeft="@dimen/_3sdp" />
+                            </com.google.android.material.textfield.TextInputLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+<LinearLayout
+    android:id="@+id/llyappy"
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:visibility="gone"
+    android:layout_margin="@dimen/_7sdp"
+    android:padding="@dimen/_7sdp"
+    android:background="@drawable/reantangle_shape_grey_broder"
+    android:layout_height="wrap_content">
+    <ImageView
+        android:layout_width="@dimen/_73sdp"
+        android:layout_height="@dimen/_70sdp"
+        android:layout_alignParentRight="true"
+        android:layout_margin="@dimen/_7sdp"
+        android:background="@drawable/yappy_payment"></ImageView>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/_10sdp"
+        android:gravity="center_vertical|bottom"
+        android:textSize="@dimen/_20sdp"
+        android:textColor="@color/black"
+        android:layout_marginBottom="@dimen/_7sdp"
+        android:text="\@Evision">
+
+    </TextView>
+
+</LinearLayout>
 
                 <RelativeLayout
                     android:id="@+id/ll_telred"
@@ -234,7 +411,7 @@
                     <ImageView
                         android:layout_width="@dimen/_73sdp"
                         android:layout_height="@dimen/_65sdp"
-                      android:layout_alignParentRight="true"
+                        android:layout_alignParentRight="true"
                         android:background="@drawable/clave_payment_logo"></ImageView>
                    <!-- <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"

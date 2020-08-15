@@ -147,6 +147,31 @@
                     android:textColor="@android:color/holo_red_light"
                     android:textSize="@dimen/_11sdp" />
             </LinearLayout>
+            <LinearLayout
+                android:id="@+id/ll_bac"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/tv_attentation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/_10sdp"
+                    android:paddingRight="@dimen/_10sdp"
+                    android:paddingTop="@dimen/_3sdp"
+                    android:layout_marginLeft="@dimen/_8sdp"
+                    android:textStyle="bold"
+                    android:paddingBottom="@dimen/_5sdp"
+
+                    android:background="@color/yellow"
+                    android:textSize="@dimen/_11sdp" />
+                <ImageView
+                    android:layout_width="@dimen/_110sdp"
+                    android:layout_height="@dimen/_60sdp"
+                    android:layout_marginLeft="@dimen/_10sdp"
+                    android:background="@drawable/baclogo"></ImageView>
+            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"

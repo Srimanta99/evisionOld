@@ -28,7 +28,7 @@ interface ApiInterface {
    // fun callfaultstatusmessagechange(@Header("Authorization") token:String,@Header("site_id") site_id:String, @Body body: JsonObject): Call<FaultStatusMessageChange>
 
    // @Headers("Content-Type: application/json")
-    @POST("/api/init-deposit")
+    @POST("api/init-deposit")
     fun callApiinitdeposit(@Header("Content-Type") type:String,@Header("Authorization") token:String, @Body body: JsonObject): Call<InitDepositResponse>
 
 

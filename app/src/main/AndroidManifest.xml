@@ -150,6 +150,9 @@
         <activity android:name=".CartManage.PaymentRedirectUrlActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".CartManage.OrderSucessActivityYappyPayment"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
 
     </application>
 

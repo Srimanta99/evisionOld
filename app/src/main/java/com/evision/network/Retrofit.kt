@@ -22,7 +22,7 @@ object Retrofit {
 
             if (retrofit == null) {
                 retrofit = retrofit2.Retrofit.Builder()
-                    .baseUrl("https://apisandboxqa.mpaycenter.com/")
+                    .baseUrl("https://apitelered.mpaycenter.com/mpay-telered-orchestrator/")
                     .client(okHttpClient)
                     .addConverterFactory(ScalarsConverterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
