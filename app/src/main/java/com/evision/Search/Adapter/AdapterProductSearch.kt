@@ -72,13 +72,23 @@ class AdapterProductSearch(mContext: Context, list: List<Product>) : RecyclerVie
         p0.TXT_Price.setText(item.currency + " " + item.price.toString())
         p0.SPECIAL_Price.setText("")
         val spclprice = item.specialPrice.toDouble()
+        val  p_price=item.price.toDouble()
+        if (p_price>0.0){
+            p0.TXT_Price.visibility=View.VISIBLE
+            p0.SPECIAL_Price.visibility=View.VISIBLE
+        }else{
+            p0.TXT_Price.visibility=View.INVISIBLE
+            p0.SPECIAL_Price.visibility=View.INVISIBLE
+        }
+
         if (spclprice > 0.0) {
             p0.TXT_Price.setText(item.currency + " " + spclprice)
             val newprice = "<b>" + item.currency + item.price.toString() + "</b>"
             p0.SPECIAL_Price.setText(Html.fromHtml(newprice))
             p0.SPECIAL_Price.paintFlags = p0.TXT_Price.getPaintFlags() or Paint.STRIKE_THRU_TEXT_FLAG
+            p0.TXT_Price.visibility=View.VISIBLE
+            p0.SPECIAL_Price.visibility=View.VISIBLE
         }
-
 
         p0.TXT_DESCRIPTION.setText(item.short_description)
         Glide.with(mContext).load(item.productImage).apply(RequestOptions().centerCrop()).into(p0.IMG_item)

@@ -55,6 +55,8 @@ import com.evision.ContactUs.BranchesActivity
 import com.evision.ContactUs.PrivacySaleActivity
 import com.evision.ContactUs.TermConditionSaleActivity
 import com.evision.Login_Registration.Pojo.LoginResponse
+import com.evision.ProductList.ProductDetailsActivity
+import com.evision.SplashActivity
 import com.evision.Utils.*
 import com.evision.contactinfo.ContactInfoActivity
 import com.google.android.gms.tasks.OnCompleteListener
@@ -112,6 +114,14 @@ mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);*/
         bottom_navigation.setOnNavigationItemSelectedListener(this)
         nav_view.getMenu().getItem(1).setActionView(R.layout.next_menu)
         nav_view.itemIconTintList=null
+
+        if(SplashActivity.is_from_dynamic_link){
+            val call = Intent(this, ProductDetailsActivity::class.java)
+            call.putExtra("pid", SplashActivity.new_id)
+            startActivity(call)
+
+        }
+
         val btncategory:Button=toolbar.findViewById(R.id.btncategory)
         btncategory.setOnClickListener {
            // Toast.makeText(this, "Under Development", Toast.LENGTH_SHORT).show()

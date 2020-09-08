@@ -11,8 +11,8 @@ android {
         applicationId "com.evision"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 13
-        versionName "13"
+        versionCode 15
+        versionName "15"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -67,6 +67,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.3.1'
     implementation 'com.squareup.retrofit2:converter-scalars:2.3.0'
+    implementation 'com.google.firebase:firebase-dynamic-links:16.+'
 
 }
 

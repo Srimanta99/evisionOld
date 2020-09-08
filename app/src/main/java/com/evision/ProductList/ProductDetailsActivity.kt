@@ -29,6 +29,7 @@ import com.evision.CartManage.CartActivity
 import com.evision.Login_Registration.LoginActivity
 import com.evision.ProductList.Adapter.ProductMultipuleImageAdapter
 import com.evision.R
+import com.evision.SplashActivity
 import com.evision.Utils.*
 import com.evision.mainpage.MainActivity
 import com.google.gson.Gson
@@ -75,29 +76,29 @@ class ProductDetailsActivity : AppCompatActivity() {
         val IMG_Product = findViewById<ImageView>(R.id.IMG_Product)
      //   AppRater(this!!).app_launched();
         val params = HashMap<String, Any>()
-        params.put("product_id", intent.getStringExtra("pid"))
+        if(SplashActivity.is_from_dynamic_link) {
+            params.put("model_number", intent.getStringExtra("pid"))
+            params.put("product_id", "")
+        }else {
+            params.put("model_number", "")
+            params.put("product_id", intent.getStringExtra("pid"))
+        }
+        SplashActivity.is_from_dynamic_link=false
         EvisionLog.E("##params", params.toString())
         EvisionLog.E("##product_id", intent.getStringExtra("pid"))
         onHTTP().POSTCALL(URL.GETDETAILS,params,object : OnHttpResponse {
             override fun onSuccess(response: String) {
                 EvisionLog.E("##ProductDetailsResponse", response)
                 if (response.isEmpty()){
-
-
                     loader.dismiss()
                     Toast.makeText(this@ProductDetailsActivity,"Este producto no está disponible en este momento. Volveremos pronto.",Toast.LENGTH_LONG).show()
                     finish()
-
-
                 }else {
-
                     val objRes=JSONObject(response)
 //                val details = Gson().fromJson(response, PDetails::class.java)
                     if (objRes.optInt("status") == 200) {
 //                    toolbar.setTitle(details.product_view.get(0).category_name)
                         //bac payment
-
-
                         toolbar.setTitle(objRes.optJSONArray("product_view").optJSONObject(0).optString("category_name"))
 //                    Glide.with(this@ProductDetailsActivity).load(details.product_view.get(0).product_image).apply(RequestOptions().placeholder(R.drawable.ic_placeholder)).into(IMG_Product)
                         Glide.with(this@ProductDetailsActivity).load(objRes.optJSONArray("product_view").optJSONObject(0).optString("product_image")).apply(RequestOptions().placeholder(R.drawable.ic_placeholder)).into(IMG_Product)
@@ -111,12 +112,10 @@ class ProductDetailsActivity : AppCompatActivity() {
                             }
                             setadapterforimagelist()
                         }
-
-
                        // WebV.settings.setAppCacheEnabled(true)
                         val settings1 = WebV.getSettings()
                         settings1.setDefaultTextEncodingName("utf-8");
-//                    WebV.loadData(details.product_view.get(0).descripcion, "text/html; charset=utf-8", "UTF-8")
+//                      WebV.loadData(details.product_view.get(0).descripcion, "text/html; charset=utf-8", "UTF-8")
 
                         val header = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>"
                          val ss:String=objRes.optJSONArray("product_view").optJSONObject(0).optString("descripcion")
@@ -224,7 +223,7 @@ class ProductDetailsActivity : AppCompatActivity() {
                         TXT_Pname.setText(objRes.optJSONArray("product_view").optJSONObject(0).optString("product_name"))
 //                    TXT_ModelNo.setText(details.product_view.get(0).modelo)
 //                    sahrelink = details.product_view[0].product_ink
-                        sahrelink = objRes.optJSONArray("product_view").optJSONObject(0).optString("product_ink")
+                        sahrelink = objRes.optJSONArray("product_view").optJSONObject(0).optString("product_link")
 //                    cat_id = details.product_view[0].category_id
                         cat_id = objRes.optJSONArray("product_view").optJSONObject(0).optString("category_id")
 //                    cat_name = details.product_view[0].category_name
@@ -461,9 +460,8 @@ class ProductDetailsActivity : AppCompatActivity() {
             R.id.action_sahre -> {
                 val sendIntent = Intent()
                 sendIntent.action = Intent.ACTION_SEND
-                sendIntent.putExtra(Intent.EXTRA_TEXT,
-                        sahrelink)
-                sendIntent.type = "text/plain"
+                sendIntent.putExtra(Intent.EXTRA_TEXT, sahrelink)
+                sendIntent.type = "text/html"
                 startActivity(sendIntent)
             }
 

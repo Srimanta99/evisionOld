@@ -2,44 +2,48 @@ package com.evision
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.annotation.TargetApi
-import android.app.Activity
 import android.app.AlertDialog
-import android.content.*
+import android.content.ContentUris
+import android.content.ContentValues
+import android.content.DialogInterface
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.provider.ContactsContract
-import android.provider.Settings
-import android.telephony.TelephonyManager
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.evision.ProductList.ProductDetailsActivity
 import com.evision.Utils.ShareData
 import com.evision.mainpage.MainActivity
-import com.karumi.dexter.Dexter
-import com.karumi.dexter.MultiplePermissionsReport
-import com.karumi.dexter.PermissionToken
-import com.karumi.dexter.listener.PermissionDeniedResponse
-import com.karumi.dexter.listener.PermissionGrantedResponse
-import com.karumi.dexter.listener.PermissionRequest
-import com.karumi.dexter.listener.multi.MultiplePermissionsListener
-import com.karumi.dexter.listener.single.PermissionListener
+import com.google.android.gms.tasks.OnFailureListener
+import com.google.android.gms.tasks.OnSuccessListener
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
+import com.google.firebase.dynamiclinks.PendingDynamicLinkData
 import kotlinx.android.synthetic.main.activity_splash.*
 
 
 class SplashActivity : AppCompatActivity() {
     val REQUEST_READ_PHONE_STATE: Int = 222
+    var Dynamiclink_url = ""
+
+    companion object{
+        public   var is_from_dynamic_link = false
+        var new_id:kotlin.String? = ""
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 //        Glide.with(this).load(R.drawable.bg_splace).apply(RequestOptions().centerCrop()).into(ING_BG)
-        Glide.with(this).load(R.drawable.logo2).apply(RequestOptions().fitCenter()).into(LOG)
+       // Glide.with(this).load(R.drawable.logo2).apply(RequestOptions().fitCenter()).into(LOG)
 /*
         val stock_list = ArrayList<String>()
         stock_list.add(Manifest.permission.WRITE_CONTACTS)
@@ -49,7 +53,7 @@ class SplashActivity : AppCompatActivity() {
         val multiple_permissions = listOf(Manifest.permission.READ_PHONE_STATE, Manifest.permission.WRITE_CONTACTS)
 
         val addContactsUri = ContactsContract.Data.CONTENT_URI
-        val call = Intent(this, MainActivity::class.java)
+        var call = Intent(this, MainActivity::class.java)
         call.putExtra("ACTION", "NO")
        /*  Intent intent = getIntent();
     Uri data = intent.getData();
@@ -256,6 +260,48 @@ class SplashActivity : AppCompatActivity() {
                         token.continuePermissionRequest()
                     }
                 }).check()*/
+    }
+
+    override fun onStart() {
+         super.onStart()
+        try {
+            FirebaseDynamicLinks.getInstance().getDynamicLink(intent)
+                    .addOnSuccessListener { pendingDynamicLinkData: PendingDynamicLinkData? ->
+                        var deepLink: Uri? = null
+                        if (pendingDynamicLinkData != null) {
+                            deepLink = pendingDynamicLinkData.link
+                            Dynamiclink_url = deepLink.toString()
+                            Log.w("gg", Dynamiclink_url)
+                            val result: Array<String> = Dynamiclink_url.split("=".toRegex()).toTypedArray()
+                            new_id = result[result.size - 1]
+                            is_from_dynamic_link = true
+                        } else {
+                            val uri = intent.data
+                            if (uri != null) {
+                                Log.i("MyApp", "")
+                                Dynamiclink_url = uri.toString()
+                                Log.w("gg", Dynamiclink_url)
+                                val result: Array<String> = Dynamiclink_url.split("=".toRegex()).toTypedArray()
+                                new_id = result[result.size - 1]
+                                is_from_dynamic_link = true
+                            }
+                        }
+                    }
+                    .addOnFailureListener(this, OnFailureListener {
+                        is_from_dynamic_link = false
+                    })
+        }catch (e :Exception){
+            e.printStackTrace()
+            is_from_dynamic_link = false
+        }
+       /* if (is_from_dynamic_link){
+            val call = Intent(this@SplashActivity, ProductDetailsActivity::class.java)
+            call.putExtra("pid", new_id)
+            startActivity(call)
+            finish()
+        }*/
+
+
     }
 
     @SuppressLint("MissingPermission")

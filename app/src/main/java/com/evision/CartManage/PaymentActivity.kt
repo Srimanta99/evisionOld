@@ -322,6 +322,7 @@ class PaymentActivity : AppCompatActivity() {
             params.put("returnUrl",retrrnurl)
             params.put("skipregister",true)
             params.put("itbms",tex)
+            params.put("channel","APP")
 
             val callApi = apiInterface.callApiinitdeposit("application/json", authToken,  gsonObject!!)
             callApi.enqueue(object : Callback<InitDepositResponse>{

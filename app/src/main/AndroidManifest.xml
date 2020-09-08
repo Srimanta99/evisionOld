@@ -54,7 +54,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".SplashActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -73,6 +74,7 @@
             android:label="@string/title_activity_main"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".ProductList.ProductListActivity"
             android:screenOrientation="portrait"
@@ -150,6 +152,7 @@
         <activity android:name=".CartManage.PaymentRedirectUrlActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+
         <activity android:name=".CartManage.OrderSucessActivityYappyPayment"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>

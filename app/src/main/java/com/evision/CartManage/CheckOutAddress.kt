@@ -70,8 +70,8 @@ class CheckOutAddress : AppCompatActivity(), GoogleMap.OnMarkerClickListener {
     private var CITYID2: String? = ""
     lateinit var loader: AppDialog
     lateinit var customerAddress: CustomerAddress
-    lateinit var customerAddress_billing: CustomerAddressBilling
-    lateinit var customerAddress_Shipping: CustomerAddress
+     var customerAddress_billing: CustomerAddressBilling?=null
+     var customerAddress_Shipping: CustomerAddress?=null
 
     @SuppressLint("JavascriptInterface")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -184,8 +184,8 @@ class CheckOutAddress : AppCompatActivity(), GoogleMap.OnMarkerClickListener {
                 var obj = JSONObject(response)
                 if (obj.optInt("status") == 200) {
                     customerAddress = Gson().fromJson(obj.getJSONArray("checkout_address").optJSONObject(0).toString(), CustomerAddress::class.java)
-                    customerAddress.country_id = "169"
-                    customerAddress.country_name = "Panama"
+                   // customerAddress.country_id = "169"
+                   // customerAddress.country_name = "Panama"
                     EDX_fname.setText(customerAddress.fisrt_name)
                     first_name1.setText(customerAddress.fisrt_name)
                     EDX_lname.setText(customerAddress.last_name)
@@ -193,11 +193,28 @@ class CheckOutAddress : AppCompatActivity(), GoogleMap.OnMarkerClickListener {
                     EDX_Address.setText(customerAddress.address)
                     EDX_Address2.setText(customerAddress.address)
                     TXT_COUNTRY.setText(customerAddress.country_name)
+                    TXT_COUNTRY2.text = customerAddress.country_name
                     TXT_STATE.setText(customerAddress.state_name)
+                     TXT_STATE2.setText(customerAddress.state_name)
                     TXT_CITY.setText(customerAddress.city_name)
+                     TXT_CITY2.setText(customerAddress.city_name)
                     EDX_phone.setText(customerAddress.telephone)
+                     EDX_telephone.setText(customerAddress.telephone)
+                    COUNTRYID2=customerAddress.country_id
                     CITYID = customerAddress.city_id
                     STATEID = customerAddress.state_id
+
+                    COUNTRYID=customerAddress.country_id
+                    CITYID2 = customerAddress.city_id
+                    STATEID2 = customerAddress.state_id
+
+                  /*  customerAddress_billing!!.country_id=customerAddress.country_id
+                            customerAddress_billing!!.state_id=customerAddress.state_id
+                    customerAddress_billing!!.city_id=customerAddress.city_id
+
+                    customerAddress_Shipping!!.country_id=customerAddress.country_id
+                    customerAddress_Shipping!!.state_id=customerAddress.state_id
+                    customerAddress_Shipping!!.city_id=customerAddress.city_id*/
                    /* TXT_COUNTRY.setOnClickListener {
 
                         val selectCountry=CountryFragment.newInstance("[\n" +
@@ -572,8 +589,8 @@ class CheckOutAddress : AppCompatActivity(), GoogleMap.OnMarkerClickListener {
                 startActivity(Intent(this, DeliveryMethodActivity::class.java).putExtra("shipping", customerAddress_Shipping).putExtra("billing", customerAddress_billing).putExtra("is_same", CHECKBOXDIFE.isChecked))
             }
             else{
-                customerAddress_Shipping= CustomerAddress(customerAddress_billing.address,customerAddress_billing.address_1,customerAddress_billing.address_2,customerAddress_billing.city_id,customerAddress_billing.city_name,
-                        customerAddress_billing.country_id,customerAddress_billing.country_name,customerAddress_billing.fisrt_name,customerAddress_billing.last_name,customerAddress_billing.state_id,customerAddress_billing.state_name,customerAddress_billing.telephone,Ccp.selectedCountryCode)
+                customerAddress_Shipping= CustomerAddress(customerAddress_billing!!.address,customerAddress_billing!!.address_1,customerAddress_billing!!.address_2,customerAddress_billing!!.city_id,customerAddress_billing!!.city_name,
+                        customerAddress_billing!!.country_id,customerAddress_billing!!.country_name,customerAddress_billing!!.fisrt_name,customerAddress_billing!!.last_name,customerAddress_billing!!.state_id,customerAddress_billing!!.state_name,customerAddress_billing!!.telephone,Ccp.selectedCountryCode)
               //  customerAddress=customerAddress_Shipping
                 startActivity(Intent(this, DeliveryMethodActivity::class.java).putExtra("shipping", customerAddress_Shipping).putExtra("billing", customerAddress_billing).putExtra("is_same", CHECKBOXDIFE.isChecked))
             }
