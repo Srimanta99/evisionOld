@@ -56,6 +56,7 @@ public class URL {
     public static final String NOTIFY_USER= BASE+"user/account/notifyproemail.php";
     public static final String RATE_PRODUCT=BASE+"user/account/customer_review.php";
     public  static final String SENDTOKEN=BASE+"user/mobileappinfo.php";
+    public  static final String DEEPLINKPRODUCTLIST=BASE+"/product/deep_linking_product_list.php";
 
    // public static final String TOKENVALIDATION="https://apisandboxqa.mpaycenter.com/api/oauth/token";
     public static final String TOKENVALIDATION="https://apitelered.mpaycenter.com/mpay-telered-orchestrator/api/oauth/token";

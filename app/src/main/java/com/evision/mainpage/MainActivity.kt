@@ -72,7 +72,7 @@ import kotlinx.android.synthetic.main.content_main.*
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, MainContarctor.Main_View,BottomNavigationView.OnNavigationItemSelectedListener {
     private val REQ_LOGIN: Int = 12
-
+    private val REQ_LOGINToMyACCOUNT: Int = 12
     var token=""
     //lateinit var  nav_signout:MenuItem
 companion object{
@@ -90,6 +90,7 @@ companion object{
     var currentVersion: String? = null
     val REQUEST_READ_PHONE_STATE:Int=222
     var imei:String?=""
+   lateinit var manucart :Menu
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -116,9 +117,42 @@ mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);*/
         nav_view.itemIconTintList=null
 
         if(SplashActivity.is_from_dynamic_link){
-            val call = Intent(this, ProductDetailsActivity::class.java)
-            call.putExtra("pid", SplashActivity.new_id)
-            startActivity(call)
+            if (SplashActivity.gotoprolist){
+                val call = Intent(this, ProductListActivity::class.java)
+                call.putExtra("pid", "BYMODELFROMHOME")
+                call.putExtra("cat_id", "")
+                call.putExtra("cname", "Products")
+                call.putExtra("model", SplashActivity.new_id)
+                startActivity(call)
+                SplashActivity.gotoprolist=false
+                //finish()
+
+             //   SplashActivity.gotoprolist=false
+            }
+           else if(SplashActivity.gotoContnct){
+                startActivity(Intent(this, ContactUsActivity::class.java))
+                SplashActivity.gotoContnct=false
+               // finish()
+            }
+            else if (SplashActivity.gotoproductdetails) {
+                val call = Intent(this, ProductDetailsActivity::class.java)
+                call.putExtra("pid", SplashActivity.new_id)
+                startActivity(call)
+                SplashActivity.gotoproductdetails
+              //  finish()
+            }
+            else if (SplashActivity.gotomyaccount){
+                val logindata = ShareData(this).getUser()
+                if(logindata==null)
+                {
+                    startActivityForResult(Intent(this, LoginActivity::class.java), REQ_LOGINToMyACCOUNT)
+                }else
+                // if(logindata!!.cartCount!=null)
+                // startActivity(Intent(this,CartActivity::class.java))
+                    startActivity(Intent(this, MyAccActivity::class.java))
+                   SplashActivity.gotomyaccount=false
+
+            }
 
         }
 
@@ -204,9 +238,9 @@ mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);*/
         } catch (e1: PackageManager.NameNotFoundException) {
             // TODO Auto-generated catch block
             e1.printStackTrace()
+            GetVersionCode().execute()
         }
         currentVersion = pInfo!!.versionName
-        GetVersionCode().execute()
 
     }
 
@@ -317,12 +351,14 @@ mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);*/
             TXT_username.isClickable = false
             if(logindata.cartCount!=null)
             ManageCartView(logindata.cartCount)
-            
         }
+        //else
+          //  ManageCartViewwithoutlogin();
     }
 
     override fun onResume() {
         super.onResume()
+        System.out.println("call onresume")
       //  bottom_navigation.setSelectedItemId(R.id.navigation_home);
 //        bottom_navigation.getMenu().getItem(5).setChecked(false);
         bottom_navigation.getMenu().getItem(4).setChecked(false);
@@ -332,8 +368,26 @@ mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);*/
         bottom_navigation.getMenu().getItem(0).setChecked(true);
         if(ShareData(this).getUser()!=null && isReadyforCourtCount)
             LOGINMANAGE()
-    }
+       // else
+          //  ManageCartViewwithoutlogin();
 
+    }
+    fun ManageCartViewwithoutlogin() {
+        menuCartItem= manucart.findItem(R.id.action_cart)
+        val i = ShareData(this).read("cart",0)
+        val inflatedFrame = layoutInflater.inflate(R.layout.cart_layout, null)
+        val item = inflatedFrame.findViewById(R.id.TXT_Counter) as TextView
+        if (i!! <= 0)
+            item.visibility = View.GONE
+        else
+            item.visibility = View.VISIBLE
+        item.text = i.toString() + ""
+        val drawable = BitmapDrawable(resources, Converter.getBitmapFromView(inflatedFrame))
+        menuCartItem.setIcon(drawable)
+        isReadyforCourtCount = true
+        // if (ShareData(this).getUser() != null)
+        //    nav_signout!!.setVisible(false)
+    }
     override fun onPostResume() {
         super.onPostResume()
 //        LOGINMANAGE()
@@ -369,6 +423,8 @@ mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);*/
          isReadyforCourtCount=true
     }
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        System.out.println("call oncraetemenu")
+        manucart=menu;
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.main, menu)
         menuCartItem = menu.findItem(R.id.action_cart)
@@ -613,6 +669,9 @@ mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);*/
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQ_LOGIN && resultCode == Activity.RESULT_OK) {
             LOGINMANAGE()
+        }else if (requestCode==REQ_LOGINToMyACCOUNT && resultCode == Activity.RESULT_OK){
+            LOGINMANAGE()
+            startActivity(Intent(this, MyAccActivity::class.java))
         }
     }
 

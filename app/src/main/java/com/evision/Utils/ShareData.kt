@@ -42,6 +42,13 @@ class ShareData (mContext: Context){
     fun read( key:String,value: String):String?{
         return prefs!!.getString(key,value)
     }
+    fun write( key: String,value: String){
+        val prefeditor:SharedPreferences.Editor= prefs!!.edit()
+        with(prefeditor){
+            putString(key,value)
+            commit()
+        }
+    }
 
     fun write( key: String,value: Int){
         val prefeditor:SharedPreferences.Editor= prefs!!.edit()

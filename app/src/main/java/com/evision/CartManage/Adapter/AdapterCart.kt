@@ -115,8 +115,14 @@ class AdapterCart(mCotext: Context, arrayList: CartResponse, loader: AppDialog) 
                     notifyDataSetChanged()
                     mContext as CartActivity
                     mContext.loadData()
+                    Toast.makeText(mContext, JSONObject(response).optString("message"), Toast.LENGTH_LONG).show()
+
                 }
-                Toast.makeText(mContext, JSONObject(response).optString("message"), Toast.LENGTH_LONG).show()
+                else {
+                    Toast.makeText(mContext, JSONObject(response).optString("message"), Toast.LENGTH_LONG).show()
+                    loader.dismiss()
+                }
+
             }
 
             override fun onError(error: String) {
@@ -130,6 +136,7 @@ class AdapterCart(mCotext: Context, arrayList: CartResponse, loader: AppDialog) 
 
         })
     }
+
 
     private fun MINUSCART(itemData: CartItem, isadded: Boolean) {
         val params = HashMap<String, Any>()
@@ -149,8 +156,13 @@ class AdapterCart(mCotext: Context, arrayList: CartResponse, loader: AppDialog) 
                     notifyDataSetChanged()
                     mContext as CartActivity
                     mContext.loadData()
+                    Toast.makeText(mContext, JSONObject(response).optString("message"), Toast.LENGTH_LONG).show()
+
                 }
-                Toast.makeText(mContext, JSONObject(response).optString("message"), Toast.LENGTH_LONG).show()
+                else {
+                    Toast.makeText(mContext, JSONObject(response).optString("message"), Toast.LENGTH_LONG).show()
+                    loader.dismiss()
+                }
 
             }
 

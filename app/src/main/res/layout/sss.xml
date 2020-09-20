@@ -560,19 +560,26 @@
                 </RelativeLayout>
 
                 <TextView
+                    android:id="@+id/tv_coupontext"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:text="@string/applycoupon"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_14sdp" />
-
+<LinearLayout
+    android:id="@+id/ll_coupon"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:visibility="gone"
+    android:orientation="vertical">
                 <EditText
                     android:id="@+id/EDX_COUPON"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/_12sdp"
-                    android:hint="@string/applycoupon" />
+                    android:visibility="visible"
+                    android:hint="Ingrese un código de cupón de descuento" />
 
                 <Button
                     android:id="@+id/EDX_apply"
@@ -581,8 +588,9 @@
                     android:backgroundTint="@color/red"
                     android:text="@string/apply"
                     android:textSize="@dimen/_11sdp"
+                    android:layout_marginTop="@dimen/_7sdp"
                     android:textColor="@color/white" />
-
+</LinearLayout>
 
                 <TextView
                     android:layout_width="wrap_content"

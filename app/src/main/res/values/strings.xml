@@ -235,7 +235,7 @@
     <string name="Choosedelivery">Choose delivery</string>
     <string name="pickupstore">Selecciona donde quieres recoger tu pedido</string>
     <string name="chose_payment_method">Deseas pagar en tienda o online?</string>
-    <string name="applycoupon">Aplicar cupón</string>
+    <string name="applycoupon"> Tiene un cupón de descuento?</string>
     <string name="revision_text">Revisión del pedido</string>
     <string name="alert_delivery">Selecciona una de las opciones</string>
     <string name="thankyou">Gracias</string>

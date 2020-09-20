@@ -15,6 +15,7 @@ import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
 import android.widget.PopupWindow
+import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -74,6 +75,7 @@ class PaymentActivity : AppCompatActivity() {
     var order_id:String=""
     var isallowbacc_payment:Boolean=false
 
+
     var cardtypelist= arrayOf("American express","uuuyuqyqeryqwury","whqudhoqwuyroi")
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -125,6 +127,12 @@ class PaymentActivity : AppCompatActivity() {
             openpopupdrop_downfoeweight()
         }
 
+        tv_coupontext.setOnClickListener {
+            if (ll_coupon.visibility==View.VISIBLE)
+                ll_coupon.visibility=View.GONE
+            else
+                ll_coupon.visibility=View.VISIBLE
+        }
        /* cardv.cardRequired(true)
                 .expirationRequired(true)
                 .cvvRequired(false)
@@ -210,6 +218,12 @@ class PaymentActivity : AppCompatActivity() {
 
         BTN_pay.setOnClickListener {
           //  if (selectpaymentoption) {
+           /* if(ll_coupon.visibility==View.VISIBLE) {
+                if (EDX_COUPON.text.toString().isEmpty()) {
+                    EDX_COUPON.setHintTextColor(Color.RED)
+                    return@setOnClickListener
+                }
+            }*/
                if(RB_TELRED.isChecked) {
                    //if (checkblankfortelredpayment())
                        if (chk_term.isChecked) {
@@ -264,7 +278,7 @@ class PaymentActivity : AppCompatActivity() {
             }
 
             override fun onSuccess(response: String) {
-                EvisionLog.D("## Pay RESPONSE-", response)
+                EvisionLog.D("## Pay 1st RESPONSE-", response)
                 loader.dismiss()
                 try {
                     val auth_token = JSONObject(response).optString("authorization_token")
@@ -303,11 +317,12 @@ class PaymentActivity : AppCompatActivity() {
             paramObject.put("returnUrl",retrrnurl)
             paramObject.put("skipregister",true)
             paramObject.put("itbms",tex)
+            paramObject.put("channel","APP")
 
             var obj: JSONObject = paramObject
             var jsonParser: JsonParser = JsonParser()
             var gsonObject: JsonObject = jsonParser.parse(obj.toString()) as JsonObject;
-            EvisionLog.D("## DATA 2ndApi", gsonObject.toString())
+            EvisionLog.D("## Pay 2st json-", gsonObject.toString())
 
             val params = HashMap<String, Any>()
             params.put("commerceCode", "4134bd3c-0167-4e57-ba7d-6e6af15ee35e")
@@ -327,7 +342,8 @@ class PaymentActivity : AppCompatActivity() {
             val callApi = apiInterface.callApiinitdeposit("application/json", authToken,  gsonObject!!)
             callApi.enqueue(object : Callback<InitDepositResponse>{
                 override fun onResponse(call: Call<InitDepositResponse>, response: Response<InitDepositResponse>) {
-                   // EvisionLog.D("## Pay RESPONSE init api-", response.body()!!.string())
+                    EvisionLog.D("## Pay 2st response-", response.body().toString())
+                   // EvisionLog.D("## Pay RESPONSE init api-", ..()!!.string())
                     //val responseString = response.body()!!.string()
                     //val gson = Gson()
                    // val responseobj = gson.toJson(responseString)
@@ -372,8 +388,9 @@ class PaymentActivity : AppCompatActivity() {
             }
 
             override fun onSuccess(response: String) {
+                EvisionLog.D("## Pay 3rd response-", response)
 
-                EvisionLog.D("## SECOND RESPONSE-", response)
+               // EvisionLog.D("## SECOND RESPONSE-", response)
             }
 
             override fun onError(error: String) {
@@ -389,7 +406,7 @@ class PaymentActivity : AppCompatActivity() {
 
             override fun onSuccess(response: String) {
                 val status = JSONObject(response).optString("status")
-                EvisionLog.D("## SESSIOn RESPONSE-", response)
+                EvisionLog.D("## Pay 4rd response-", response)
                 if (status.equals("success")) {
                     startActivity(Intent(this@PaymentActivity, PaymentRedirectUrlActivity::class.java).putExtra("url", url!!))
                     finish()
@@ -636,6 +653,7 @@ class PaymentActivity : AppCompatActivity() {
         params.put("discount_for",DISCOUNTFOR)
         params.put("product_ids", PRODUCT_IDS)
         params.put("discount_amount",CUPONPRICE)
+        params.put("discount_type",DISCOUNTTYPE)
       //  params.put("delivery_amount",delivery_cost!!)
 
         if (llcard_view.visibility == View.VISIBLE) {
@@ -796,7 +814,7 @@ class PaymentActivity : AppCompatActivity() {
         params.put("coupon_amount", CUPONPRICE)
         params.put("delivery_amount",delivery_cost!!)
         params.put("discount_type",DISCOUNTTYPE)
-
+        EvisionLog.D("## DATA DELIVERY- Input", params.toString())
         onHTTP().POSTCALL(URL.GETREVIEW, params, object : OnHttpResponse {
             override fun onSuccess(response: String) {
                 EvisionLog.D("## DATA DELIVERY-", response)

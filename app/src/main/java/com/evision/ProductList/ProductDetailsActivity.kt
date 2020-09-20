@@ -57,6 +57,7 @@ class ProductDetailsActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         loader = AppDialog(this)
 
+
         //val strJunk = "AtrÃ©vete a SoÃ±ar"
       //  val arrByteForSpanish = strJunk.toByteArray(charset("ISO-8859-1"))
        // val strSpanish = String(arrByteForSpanish)
@@ -301,8 +302,14 @@ class ProductDetailsActivity : AppCompatActivity() {
 
         LL_addtocart.setOnClickListener {
             if (ShareData(this).getUser() == null) {
+               /* val i = ShareData(this).read("cart",0)
+                val cart_ids = ShareData(this).read("cartid","")
+                val cartcount=i!!+1;
+                ShareData(this).write("cart",cartcount)
+                ShareData(this).write("cartid",cart_ids+","+intent.getStringExtra("pid"))
+               ManageCartViewwithoutlogin();*/
                 startActivityForResult(Intent(this, LoginActivity::class.java), REQ_LOGIN)
-                return@setOnClickListener
+               // return@setOnClickListener
             }else {
                 val params = HashMap<String, Any>()
                 params.put("customer_id", ShareData(this@ProductDetailsActivity).getUser()!!.customerId)
@@ -316,10 +323,14 @@ class ProductDetailsActivity : AppCompatActivity() {
                             EvisionLog.E("##userData", Gson().toJson(userdata))
                             userdata!!.cartCount = userdata.cartCount + EDX_cart.text.toString().toInt()
                             ShareData(this@ProductDetailsActivity).SetUserData(userdata)
-                            ManageCartView(userdata.cartCount)
+                             ManageCartView(userdata.cartCount)
                              showCartalert()
+                            Toast.makeText(this@ProductDetailsActivity, JSONObject(response).optString("message"), Toast.LENGTH_LONG).show()
+
                         }
-                        Toast.makeText(this@ProductDetailsActivity, JSONObject(response).optString("message"), Toast.LENGTH_LONG).show()
+                        else
+                            Toast.makeText(this@ProductDetailsActivity, JSONObject(response).optString("message"), Toast.LENGTH_LONG).show()
+
                     }
 
                     override fun onError(error: String) {
@@ -381,6 +392,21 @@ class ProductDetailsActivity : AppCompatActivity() {
 
     }
 
+    fun ManageCartViewwithoutlogin() {
+        val i = ShareData(this).read("cart",0)
+        val inflatedFrame = layoutInflater.inflate(R.layout.cart_layout, null)
+        val item = inflatedFrame.findViewById(R.id.TXT_Counter) as TextView
+        if (i!! <= 0)
+            item.visibility = View.GONE
+        else
+            item.visibility = View.VISIBLE
+        item.text = i.toString() + ""
+        val drawable = BitmapDrawable(resources, Converter.getBitmapFromView(inflatedFrame))
+        menuCartItem.setIcon(drawable)
+        MainActivity.isReadyforCourtCount = true
+        // if (ShareData(this).getUser() != null)
+        //    nav_signout!!.setVisible(false)
+    }
     private fun setadapterforimagelist() {
         val productMultipuleImageAdapter=ProductMultipuleImageAdapter(this,productimage_list,IMG_Product)
         val linLayoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
@@ -485,6 +511,8 @@ class ProductDetailsActivity : AppCompatActivity() {
         if (ShareData(this).getUser() != null) {
             val logindata = ShareData(this).getUser()
             ManageCartView(logindata!!.cartCount)
+        }else {
+            ManageCartViewwithoutlogin();
         }
         return super.onCreateOptionsMenu(menu)
     }

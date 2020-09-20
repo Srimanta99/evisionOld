@@ -44,14 +44,22 @@ class LoginActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+            var  product_id=ShareData(this).read("cartid","")
+            var  pp_ids:String=""
+            if (!product_id.equals(""))
+                pp_ids=product_id!!.substring(1)
+            else
+                pp_ids=""
 
             val Params = HashMap<String, Any>()
             Params.put("email", EMAIL.text.toString())
             Params.put("password", EDX_PASS.text.toString())
+            Params.put("product_ids", pp_ids)
             onHTTP().POSTCALL(URL.LOGIN_REQ, Params, object : OnHttpResponse {
                 override fun onSuccess(response: String) {
                     EvisionLog.D("## LOGIN-", response)
                     loder.dismiss()
+                   // ShareData(this@LoginActivity).write("cartid","")
                     val resp = Gson().fromJson(response, LoginResponse::class.java)
                     Toast.makeText(this@LoginActivity, resp.message, Toast.LENGTH_LONG).show()
                     if (resp.status == 200) {

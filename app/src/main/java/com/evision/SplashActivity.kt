@@ -31,11 +31,17 @@ import kotlinx.android.synthetic.main.activity_splash.*
 
 class SplashActivity : AppCompatActivity() {
     val REQUEST_READ_PHONE_STATE: Int = 222
-    var Dynamiclink_url = ""
+
 
     companion object{
         public   var is_from_dynamic_link = false
+        public   var gotoprolist = false
+        public   var CatId :String?=""
+        var Dynamiclink_url = ""
         var new_id:kotlin.String? = ""
+        public var gotoContnct=false
+        public  var gotoproductdetails=false
+        public  var gotomyaccount=false
     }
 
 
@@ -268,13 +274,30 @@ class SplashActivity : AppCompatActivity() {
             FirebaseDynamicLinks.getInstance().getDynamicLink(intent)
                     .addOnSuccessListener { pendingDynamicLinkData: PendingDynamicLinkData? ->
                         var deepLink: Uri? = null
+                        Dynamiclink_url=""
+                        gotoprolist = false
+                        gotoContnct=false
+                        gotomyaccount=false
+                        gotoproductdetails=false
                         if (pendingDynamicLinkData != null) {
                             deepLink = pendingDynamicLinkData.link
                             Dynamiclink_url = deepLink.toString()
                             Log.w("gg", Dynamiclink_url)
                             val result: Array<String> = Dynamiclink_url.split("=".toRegex()).toTypedArray()
-                            new_id = result[result.size - 1]
+                            val resultpro: Array<String> = Dynamiclink_url.split("&".toRegex()).toTypedArray()
+                          //  if(resultpro[resultpro.size-1].startsWith("pro"))
                             is_from_dynamic_link = true
+                            if(Dynamiclink_url.contains("contacto"))
+                                gotoContnct=true
+                           else if(Dynamiclink_url.contains("article"))
+                                gotoproductdetails=true
+                            else if(Dynamiclink_url.contains("myaccount"))
+                                gotomyaccount=true
+                            else
+                                gotoprolist=true
+
+                                new_id = result[result.size - 1]
+
                         } else {
                             val uri = intent.data
                             if (uri != null) {
@@ -282,8 +305,18 @@ class SplashActivity : AppCompatActivity() {
                                 Dynamiclink_url = uri.toString()
                                 Log.w("gg", Dynamiclink_url)
                                 val result: Array<String> = Dynamiclink_url.split("=".toRegex()).toTypedArray()
-                                new_id = result[result.size - 1]
+                             //   val resultpro: Array<String> = Dynamiclink_url.split("?".toRegex()).toTypedArray()
                                 is_from_dynamic_link = true
+                                if(Dynamiclink_url.contains("contacto"))
+                                    gotoContnct=true
+                                else if(Dynamiclink_url.contains("article"))
+                                    gotoproductdetails=true
+                                else if(Dynamiclink_url.contains("myaccount"))
+                                    gotomyaccount=true
+                                else
+                                    gotoprolist=true
+
+                                new_id = result[result.size - 1]
                             }
                         }
                     }

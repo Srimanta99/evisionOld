@@ -71,6 +71,7 @@ class CartActivity : AppCompatActivity() {
             override fun onSuccess(response: String) {
                 val data = Gson().fromJson(response, CartResponse::class.java)
                 EvisionLog.E("ResponseForCart", response.toString())
+                loader.dismiss()
                 if (data.status == 400) {
                     Toast.makeText(this@CartActivity,data.message,Toast.LENGTH_LONG).show()
                     ll_no_value.visibility= View.VISIBLE
@@ -117,7 +118,7 @@ class CartActivity : AppCompatActivity() {
                         ll_upsellproduct.visibility=View.GONE
                     }
                 }
-                loader.dismiss()
+
             }
 
             override fun onError(error: String) {

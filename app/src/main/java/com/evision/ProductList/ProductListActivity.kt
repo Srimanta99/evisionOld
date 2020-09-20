@@ -35,6 +35,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.evision.SplashActivity
 import com.evision.mainpage.MainActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
@@ -68,7 +69,10 @@ class ProductListActivity : AppCompatActivity(), ManufacturerFilter {
         supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_white_back)
         Rec_listP=findViewById(R.id.Rec_listP)
         btn_filter=findViewById(R.id.btn_filter)
+      //  if(!intent.getStringExtra("cname").equals(""))
         supportActionBar!!.setTitle(intent.getStringExtra("cname"))
+      //  else
+           // supportActionBar!!.setTitle("Products")
         Rec_listP.layoutManager = LinearLayoutManager(this) as RecyclerView.LayoutManager?
 
 
@@ -110,125 +114,162 @@ class ProductListActivity : AppCompatActivity(), ManufacturerFilter {
 
 
         }
-
-
-
-        cat_id = intent.getStringExtra("pid")
-        if (cat_id == "BYONLINENAV") {
-            cat_id = ""
-            onHTTP().GETCALL(URL.GETONLINESALELST, object : OnHttpResponse {
-                override fun onSuccess(response: String) {
-                    Response = response
-                    val plist = Gson().fromJson(response, OnlineResponse::class.java)
-                    if (plist.code == 200) {
-                        adapter = AdapterProduct(this@ProductListActivity, plist.online_products_all)
-                        Rec_listP.adapter = adapter
-                    } else {
-                        Rec_listP.adapter = null
-                        Toast.makeText(this@ProductListActivity, JSONObject(response).optString("message"), Toast.LENGTH_LONG).show()
-                        btn_filter.visibility=View.INVISIBLE
-
-                    }
-                    loader.dismiss()
-                }
-
-                override fun onError(error: String) {
-                    loader.dismiss()
-                }
-
-                override fun onStart() {
-                    loader.show()
-                }
-
-            })
-        } else if (cat_id == "BYMODEL") {
-                cat_id = intent.getStringExtra("cat_id")
-                val modelo = intent.getStringExtra("model")
-                SaerchByModel(cat_id!!, modelo)
-            }
-        else if (cat_id == "BYMODELFROMHOME") {
-            cat_id = intent.getStringExtra("cat_id")
-            val modelo = intent.getStringExtra("model")
-           // SaerchByModel(cat_id!!, modelo)
-            btn_filter!!.visibility=View.INVISIBLE
-            searchbybrandname(modelo)
-        }
-        else
-                if (cat_id == "BYSEARCH") {
-                    cat_id = ""
-                    val params = HashMap<String, Any>()
-                    params.put("keyword", intent.getStringExtra("cname"))
-                    keyword = intent.getStringExtra("cname")
-                    EvisionLog.D("## PARAMS-", Gson().toJson(params))
-                    onHTTP().POSTCALL(com.evision.Utils.URL.SEARCH, params, object : OnHttpResponse {
-                        override fun onSuccess(response: String) {
-                            Response = response
+ try {
+     if (SplashActivity.is_from_dynamic_link) {
+         SplashActivity.is_from_dynamic_link = false;
+         val params = HashMap<String, Any>()
+         params.put("url", SplashActivity.Dynamiclink_url)
+         //keyword = intent.getStringExtra("cname")
+         // EvisionLog.D("## PARAMS-", Gson().toJson(params))
+         onHTTP().POSTCALL(com.evision.Utils.URL.DEEPLINKPRODUCTLIST, params, object : OnHttpResponse {
+             override fun onSuccess(response: String) {
+                 Response = response
 //                arrlist=ArrayList()
-                            EvisionLog.D("## DATA-", response)
+                 EvisionLog.D("## DATA-", response)
 
 
-                            val listdata = Gson().fromJson(response, SearchResulty::class.java)
+                 val listdata = Gson().fromJson(response, FilterResultdata::class.java)
 //                arrlist .addAll(listdata.productList)
-                            if (listdata.status == 200) {
+                 if (listdata.status == 200) {
 
-                                adapter = AdapterProduct(this@ProductListActivity, listdata.search_data)
-                                Rec_listP.adapter = adapter
-                            } else {
-                                Rec_listP.adapter = null
-                                Toast.makeText(this@ProductListActivity, JSONObject(response).optString("message"), Toast.LENGTH_LONG).show()
-                                btn_filter.visibility=View.INVISIBLE
+                     adapter = AdapterProduct(this@ProductListActivity, listdata.productList)
+                     Rec_listP.adapter = adapter
+                 } else {
+                     Rec_listP.adapter = null
+                     Toast.makeText(this@ProductListActivity, JSONObject(response).optString("message"), Toast.LENGTH_LONG).show()
+                     btn_filter.visibility = View.INVISIBLE
 
-                            }
-                            loader.dismiss()
-                        }
+                 }
+                 loader.dismiss()
+             }
 
-                        override fun onError(error: String) {
-                            loader.dismiss()
+             override fun onError(error: String) {
+                 loader.dismiss()
 
-                        }
+             }
 
-                        override fun onStart() {
-                            loader.show()
-                        }
+             override fun onStart() {
+                 loader.show()
+             }
 
-                    })
-                } else {
-                    cat_id = intent.getStringExtra("pid")
-                    val params = HashMap<String, Any>()
-                    params.put("category_id", intent.getStringExtra("pid"))
-                    EvisionLog.D("## PARAMS-", Gson().toJson(params))
-                    onHTTP().POSTCALL(com.evision.Utils.URL.GETPRODUCTLIST, params, object : OnHttpResponse {
-                        override fun onSuccess(response: String) {
-                            Response = response
+         })
+     } else {
+         cat_id = intent.getStringExtra("pid")
+         if (cat_id == "BYONLINENAV") {
+             cat_id = ""
+             onHTTP().GETCALL(URL.GETONLINESALELST, object : OnHttpResponse {
+                 override fun onSuccess(response: String) {
+                     Response = response
+                     val plist = Gson().fromJson(response, OnlineResponse::class.java)
+                     if (plist.code == 200) {
+                         adapter = AdapterProduct(this@ProductListActivity, plist.online_products_all)
+                         Rec_listP.adapter = adapter
+                     } else {
+                         Rec_listP.adapter = null
+                         Toast.makeText(this@ProductListActivity, JSONObject(response).optString("message"), Toast.LENGTH_LONG).show()
+                         btn_filter.visibility = View.INVISIBLE
+
+                     }
+                     loader.dismiss()
+                 }
+
+                 override fun onError(error: String) {
+                     loader.dismiss()
+                 }
+
+                 override fun onStart() {
+                     loader.show()
+                 }
+
+             })
+         } else if (cat_id == "BYMODEL") {
+             cat_id = intent.getStringExtra("cat_id")
+             val modelo = intent.getStringExtra("model")
+             SaerchByModel(cat_id!!, modelo)
+         } else if (cat_id == "BYMODELFROMHOME") {
+             cat_id = intent.getStringExtra("cat_id")
+             val modelo = intent.getStringExtra("model")
+             // SaerchByModel(cat_id!!, modelo)
+             btn_filter!!.visibility = View.INVISIBLE
+             searchbybrandname(modelo)
+         } else
+             if (cat_id == "BYSEARCH") {
+                 cat_id = ""
+                 val params = HashMap<String, Any>()
+                 params.put("keyword", intent.getStringExtra("cname"))
+                 keyword = intent.getStringExtra("cname")
+                 EvisionLog.D("## PARAMS-", Gson().toJson(params))
+                 onHTTP().POSTCALL(com.evision.Utils.URL.SEARCH, params, object : OnHttpResponse {
+                     override fun onSuccess(response: String) {
+                         Response = response
 //                arrlist=ArrayList()
-                            EvisionLog.D("## DATA-", response)
+                         EvisionLog.D("## DATA-", response)
 
-                            val listdata = Gson().fromJson(response, Productlist::class.java)
-                            if(listdata.status==200) {
+
+                         val listdata = Gson().fromJson(response, SearchResulty::class.java)
 //                arrlist .addAll(listdata.productList)
-                                adapter = AdapterProduct(this@ProductListActivity, listdata.productList)
-                                Rec_listP.adapter = adapter
-                            }else {
-                                Toast.makeText(this@ProductListActivity, JSONObject(response).optString("message"), Toast.LENGTH_LONG).show()
-                                btn_filter!!.visibility=View.INVISIBLE
+                         if (listdata.status == 200) {
 
-                            }
-                            loader.dismiss()
-                        }
+                             adapter = AdapterProduct(this@ProductListActivity, listdata.search_data)
+                             Rec_listP.adapter = adapter
+                         } else {
+                             Rec_listP.adapter = null
+                             Toast.makeText(this@ProductListActivity, JSONObject(response).optString("message"), Toast.LENGTH_LONG).show()
+                             btn_filter.visibility = View.INVISIBLE
 
-                        override fun onError(error: String) {
-                            loader.dismiss()
+                         }
+                         loader.dismiss()
+                     }
 
-                        }
+                     override fun onError(error: String) {
+                         loader.dismiss()
 
-                        override fun onStart() {
-                            loader.show()
-                        }
+                     }
 
-                    })
-                }
+                     override fun onStart() {
+                         loader.show()
+                     }
 
+                 })
+             } else {
+                 cat_id = intent.getStringExtra("pid")
+                 val params = HashMap<String, Any>()
+                 params.put("category_id", intent.getStringExtra("pid"))
+                 EvisionLog.D("## PARAMS-", Gson().toJson(params))
+                 onHTTP().POSTCALL(com.evision.Utils.URL.GETPRODUCTLIST, params, object : OnHttpResponse {
+                     override fun onSuccess(response: String) {
+                         Response = response
+//                arrlist=ArrayList()
+                         EvisionLog.D("## DATA-", response)
 
+                         val listdata = Gson().fromJson(response, Productlist::class.java)
+                         if (listdata.status == 200) {
+//                arrlist .addAll(listdata.productList)
+                             adapter = AdapterProduct(this@ProductListActivity, listdata.productList)
+                             Rec_listP.adapter = adapter
+                         } else {
+                             Toast.makeText(this@ProductListActivity, JSONObject(response).optString("message"), Toast.LENGTH_LONG).show()
+                             btn_filter!!.visibility = View.INVISIBLE
+
+                         }
+                         loader.dismiss()
+                     }
+
+                     override fun onError(error: String) {
+                         loader.dismiss()
+
+                     }
+
+                     override fun onStart() {
+                         loader.show()
+                     }
+
+                 })
+             }
+     }
+ }catch (e :Exception){
+     e.printStackTrace()
+ }
     }
 
     private fun searchbybrandname(modelo: String) {
@@ -288,6 +329,22 @@ class ProductListActivity : AppCompatActivity(), ManufacturerFilter {
         //    nav_signout!!.setVisible(false)
         }
 
+    fun ManageCartViewwithoutlogin() {
+        val i = ShareData(this).read("cart",0)
+        val inflatedFrame = layoutInflater.inflate(R.layout.cart_layout, null)
+        val item = inflatedFrame.findViewById(R.id.TXT_Counter) as TextView
+        if (i!! <= 0)
+            item.visibility = View.GONE
+        else
+            item.visibility = View.VISIBLE
+        item.text = i.toString() + ""
+        val drawable = BitmapDrawable(resources, Converter.getBitmapFromView(inflatedFrame))
+        menuCartItem.setIcon(drawable)
+        isReadyforCourtCount = true
+        // if (ShareData(this).getUser() != null)
+        //    nav_signout!!.setVisible(false)
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.main, menu)
@@ -296,9 +353,10 @@ class ProductListActivity : AppCompatActivity(), ManufacturerFilter {
       //  nav_signout.setVisible(false)
         if (ShareData(this).getUser() != null ) {
             ManageCartView()
-        }else
+        }else{
             nav_signout!!.setVisible(false)
-
+            ManageCartViewwithoutlogin();
+        }
         return true
     }
 
