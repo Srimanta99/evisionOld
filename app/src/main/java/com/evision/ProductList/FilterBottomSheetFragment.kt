@@ -41,6 +41,7 @@ class FilterBottomSheetFragment : BottomSheetDialogFragment() {
     private var arrayFilter=ArrayList<Any>()
     lateinit var loader: AppDialog
     lateinit var manui: ManufacturerFilter
+    var instockChoose:String=""
     private val mBottomSheetBehaviorCallback = object : BottomSheetBehavior.BottomSheetCallback() {
 
         override fun onStateChanged(bottomSheet: View, newState: Int) {
@@ -85,21 +86,37 @@ class FilterBottomSheetFragment : BottomSheetDialogFragment() {
 
         REC_manufact.visibility = View.GONE
         TXT_MENU_BRAND.setBackgroundColor(Color.LTGRAY)
+        TXT_MENU_STOCK.setBackgroundColor(Color.LTGRAY)
         TXT_MENU_PRICE.setBackgroundColor(Color.WHITE)
         TXT_MENU_PRICE.setOnClickListener {
+            instockChoose=""
             RL_PRICE.visibility = View.VISIBLE
             REC_manufact.visibility = View.GONE
+            llstock.visibility=View.GONE
             TXT_MENU_BRAND.setBackgroundColor(Color.LTGRAY)
             TXT_MENU_PRICE.setBackgroundColor(Color.WHITE)
+            TXT_MENU_STOCK.setBackgroundColor(Color.LTGRAY)
         }
 
         TXT_MENU_BRAND.setOnClickListener {
+            instockChoose=""
             RL_PRICE.visibility = View.GONE
             REC_manufact.visibility = View.VISIBLE
+            llstock.visibility=View.GONE
             TXT_MENU_BRAND.setBackgroundColor(Color.WHITE)
             TXT_MENU_PRICE.setBackgroundColor(Color.LTGRAY)
-        }
+            TXT_MENU_STOCK.setBackgroundColor(Color.LTGRAY)
 
+        }
+        TXT_MENU_STOCK.setOnClickListener {
+            RL_PRICE.visibility = View.GONE
+            REC_manufact.visibility = View.GONE
+            instockChoose="IN_STOCK"
+            llstock.visibility=View.VISIBLE
+            TXT_MENU_STOCK.setBackgroundColor(Color.WHITE)
+            TXT_MENU_PRICE.setBackgroundColor(Color.LTGRAY)
+            TXT_MENU_BRAND.setBackgroundColor(Color.LTGRAY)
+        }
         EvisionLog.D("## PRICE-", Gson().toJson(listdata.price_filter[0]))
         if (listdata.price_filter[0].selectmax == null)
             listdata.price_filter[0].selectmax = listdata.price_filter[0].max_price
@@ -153,9 +170,13 @@ class FilterBottomSheetFragment : BottomSheetDialogFragment() {
             dismiss()
         }
         BTN_APPLY.setOnClickListener {
+          //  if (llstock.visibility==View.VISIBLE)
+             if(instockChoose.equals("IN_STOCK"))
+              ProductListActivity.keyword="IN_STOCK";
             for (i in listdata.manufacture_list) {
                 if (i.isselect) {
                     EvisionLog.D("## SS-", i.manufacture_name)
+
                 }
             }
             listdata.price_filter[0].selectmax = rangeSeekBar.selectedMaxValue.toString()

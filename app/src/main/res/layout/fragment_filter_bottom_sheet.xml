@@ -36,7 +36,10 @@
                 android:padding="10dp"
                 android:text="@string/price"
                 android:textColor="@color/black" />
-
+            <TextView
+                android:layout_width="@dimen/_1sdp"
+                android:layout_height="match_parent"
+                android:background="@color/white"></TextView>
             <TextView
                 android:id="@+id/TXT_MENU_BRAND"
                 android:layout_width="0dp"
@@ -46,11 +49,25 @@
                 android:padding="10dp"
                 android:text="@string/brand"
                 android:textColor="@color/black" />
-
-
+            <TextView
+                android:layout_width="@dimen/_1sdp"
+                android:layout_height="match_parent"
+                android:background="@color/white"></TextView>
+            <TextView
+                android:id="@+id/TXT_MENU_STOCK"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="En Stock"
+                android:textColor="@color/black" />
         </LinearLayout>
 
-
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_1sdp"
+            android:background="@color/light_grey"></TextView>
         <RelativeLayout
             android:id="@+id/RL_PRICE"
             android:layout_width="match_parent"
@@ -99,6 +116,24 @@
             android:layout_height="200dp"
             android:layout_margin="10dp"></androidx.recyclerview.widget.RecyclerView>
 
+        <LinearLayout
+    android:id="@+id/llstock"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/_40sdp"
+    android:layout_margin="10dp"
+    android:orientation="vertical"
+    android:visibility="gone">
+            <TextView
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:gravity="center"
+                android:padding="10dp"
+                android:textSize="@dimen/_14sdp"
+                android:text="En Stock"
+                android:textColor="@color/black" />
+        </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

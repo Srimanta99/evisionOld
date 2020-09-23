@@ -302,13 +302,13 @@ class ProductDetailsActivity : AppCompatActivity() {
 
         LL_addtocart.setOnClickListener {
             if (ShareData(this).getUser() == null) {
-               /* val i = ShareData(this).read("cart",0)
+                val i = ShareData(this).read("cart",0)
                 val cart_ids = ShareData(this).read("cartid","")
                 val cartcount=i!!+1;
                 ShareData(this).write("cart",cartcount)
                 ShareData(this).write("cartid",cart_ids+","+intent.getStringExtra("pid"))
-               ManageCartViewwithoutlogin();*/
-                startActivityForResult(Intent(this, LoginActivity::class.java), REQ_LOGIN)
+               ManageCartViewwithoutlogin();
+              //  startActivityForResult(Intent(this, LoginActivity::class.java), REQ_LOGIN)
                // return@setOnClickListener
             }else {
                 val params = HashMap<String, Any>()
@@ -403,7 +403,7 @@ class ProductDetailsActivity : AppCompatActivity() {
         item.text = i.toString() + ""
         val drawable = BitmapDrawable(resources, Converter.getBitmapFromView(inflatedFrame))
         menuCartItem.setIcon(drawable)
-        MainActivity.isReadyforCourtCount = true
+        isReadyforCourtCount = true
         // if (ShareData(this).getUser() != null)
         //    nav_signout!!.setVisible(false)
     }

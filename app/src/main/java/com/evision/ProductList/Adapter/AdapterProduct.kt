@@ -97,17 +97,17 @@ class AdapterProduct(mContext: Context, list: List<Product>) : RecyclerView.Adap
 
             if(ShareData(mContext).getUser()==null)
             {
-              /*  val i = ShareData(mContext as AppCompatActivity).read("cart",0)
+                val i = ShareData(mContext as AppCompatActivity).read("cart",0)
                 val cart_ids = ShareData(mContext as AppCompatActivity).read("cartid","")
                 val cartcount=i!!+1;
                 ShareData(mContext as AppCompatActivity).write("cart",cartcount)
                 ShareData(mContext as AppCompatActivity).write("cartid",cart_ids+","+item.productId.toString())
                 mContext as ProductListActivity
-                mContext.ManageCartViewwithoutlogin();*/
+                mContext.ManageCartViewwithoutlogin();
 
                 //(mContext as ProductListActivity).ManageCartView()
            //  mContext as ProductListActivity
-                (mContext as AppCompatActivity).startActivityForResult(Intent(mContext,LoginActivity::class.java),11)
+              //  (mContext as AppCompatActivity).startActivityForResult(Intent(mContext,LoginActivity::class.java),11)
             }else{
              //  aleraddtocart(item)
                 val params=HashMap<String,Any>()

@@ -78,7 +78,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 companion object{
     var isReadyforCourtCount=false
     lateinit var  nav_signout:MenuItem
-        lateinit var  menuCartItem:MenuItem
+         var  menuCartItem:MenuItem?=null
 }
     lateinit var TXT_username: TextView
     lateinit var TXT_useremail: TextView
@@ -352,12 +352,13 @@ mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);*/
             if(logindata.cartCount!=null)
             ManageCartView(logindata.cartCount)
         }
-        //else
-          //  ManageCartViewwithoutlogin();
+        else
+          ManageCartViewwithoutlogin();
     }
 
     override fun onResume() {
         super.onResume()
+        invalidateOptionsMenu();
         System.out.println("call onresume")
       //  bottom_navigation.setSelectedItemId(R.id.navigation_home);
 //        bottom_navigation.getMenu().getItem(5).setChecked(false);
@@ -383,13 +384,14 @@ mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);*/
             item.visibility = View.VISIBLE
         item.text = i.toString() + ""
         val drawable = BitmapDrawable(resources, Converter.getBitmapFromView(inflatedFrame))
-        menuCartItem.setIcon(drawable)
+        menuCartItem!!.setIcon(drawable)
         isReadyforCourtCount = true
         // if (ShareData(this).getUser() != null)
         //    nav_signout!!.setVisible(false)
     }
     override fun onPostResume() {
         super.onPostResume()
+        System.out.println("call onPostresume")
 //        LOGINMANAGE()
     }
 
@@ -418,9 +420,14 @@ mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);*/
             item.visibility = View.VISIBLE
         item.text = i.toString() + ""
         val drawable = BitmapDrawable(resources, Converter.getBitmapFromView(inflatedFrame))
-        menuCartItem.setIcon(drawable)
+        menuCartItem!!.setIcon(drawable)
 
          isReadyforCourtCount=true
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        return super.onPrepareOptionsMenu(menu)
+        System.out.println("call onprepareemenu")
     }
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         System.out.println("call oncraetemenu")
@@ -430,6 +437,10 @@ mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);*/
         menuCartItem = menu.findItem(R.id.action_cart)
         nav_signout=menu.findItem(R.id.nav_signout)
         nav_signout!!.setVisible(false)
+      /*  if(ShareData(this).getUser()!=null && isReadyforCourtCount)
+            LOGINMANAGE()
+        else
+            ManageCartViewwithoutlogin();*/
         LOGINMANAGE()
         return true
     }

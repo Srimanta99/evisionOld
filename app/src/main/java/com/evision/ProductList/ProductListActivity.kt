@@ -41,13 +41,15 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class ProductListActivity : AppCompatActivity(), ManufacturerFilter {
 
-
+companion object{
+    var keyword: String? = ""
+}
     lateinit var menuCartItem: MenuItem
     lateinit var  nav_signout:MenuItem
     lateinit var adapter: AdapterProduct
     lateinit var loader: AppDialog
     var cat_id: String? = ""
-    var keyword: String? = ""
+   // var keyword: String? = ""
     var bottomSheetDialogFragment: FilterBottomSheetFragment? = null
     var Response = ""
     var isReadyforCourtCount = false
