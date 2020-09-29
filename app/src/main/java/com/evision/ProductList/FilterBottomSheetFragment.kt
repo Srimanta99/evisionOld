@@ -116,7 +116,18 @@ class FilterBottomSheetFragment : BottomSheetDialogFragment() {
             TXT_MENU_STOCK.setBackgroundColor(Color.WHITE)
             TXT_MENU_PRICE.setBackgroundColor(Color.LTGRAY)
             TXT_MENU_BRAND.setBackgroundColor(Color.LTGRAY)
+            if( ProductListActivity.keyword.equals("IN_STOCK")){
+                chkinStock.isChecked=true
+            }else
+                chkinStock.isChecked=false
+            chkinStock.setOnCheckedChangeListener { buttonView, isChecked ->
+                if (isChecked){
+                    ProductListActivity.keyword="IN_STOCK"
+                }else
+                    ProductListActivity.keyword=""
+            }
         }
+
         EvisionLog.D("## PRICE-", Gson().toJson(listdata.price_filter[0]))
         if (listdata.price_filter[0].selectmax == null)
             listdata.price_filter[0].selectmax = listdata.price_filter[0].max_price
@@ -171,8 +182,8 @@ class FilterBottomSheetFragment : BottomSheetDialogFragment() {
         }
         BTN_APPLY.setOnClickListener {
           //  if (llstock.visibility==View.VISIBLE)
-             if(instockChoose.equals("IN_STOCK"))
-              ProductListActivity.keyword="IN_STOCK";
+             if(chkinStock.isChecked)
+               ProductListActivity.keyword="IN_STOCK";
             for (i in listdata.manufacture_list) {
                 if (i.isselect) {
                     EvisionLog.D("## SS-", i.manufacture_name)
