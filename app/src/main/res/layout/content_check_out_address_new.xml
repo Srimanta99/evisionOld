@@ -543,6 +543,7 @@
             android:id="@+id/web_map"
             android:layout_width="match_parent"
             android:layout_margin="10dp"
+            android:visibility="gone"
             android:layout_height="300dp"></com.evision.CartManage.CustomMapView>
 
 

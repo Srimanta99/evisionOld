@@ -84,6 +84,29 @@
                 android:visibility="invisible"
                 android:background="@color/colorPrimary"/>
         </LinearLayout>
+        <LinearLayout
+            android:id="@+id/ll_myquote"
+            android:layout_width="0dp"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/TXT_myquote"
+                android:layout_width="match_parent"
+                android:text="Quotations"
+                android:gravity="center"
+                android:padding="4dp"
+                android:textColor="@android:color/black"
+                android:layout_height="40dp" />
+
+            <View
+                android:id="@+id/v_quote"
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:visibility="invisible"
+                android:background="@color/colorPrimary"/>
+        </LinearLayout>
     </LinearLayout>
     <FrameLayout
         android:id="@+id/acc_container"
