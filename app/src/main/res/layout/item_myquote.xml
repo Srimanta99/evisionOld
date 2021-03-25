@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:id="@+id/ll_quotelist"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp"
+       >
+        <TextView
+            android:id="@+id/slno"
+            android:layout_width="0dp"
+            android:layout_weight=".8"
+            android:text="SI. ID"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textSize="@dimen/_8sdp"
+            android:layout_height="match_parent"></TextView>
+        <TextView
+            android:id="@+id/items"
+            android:layout_width="0dp"
+            android:layout_weight="1.4"
+            android:text="Items"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textSize="@dimen/_8sdp"
+            android:layout_height="match_parent"></TextView>
+        <TextView
+            android:id="@+id/requestdate"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:text="Request Date"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textSize="@dimen/_8sdp"
+            android:layout_height="match_parent"></TextView>
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_weight="1.5"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/status"
+                android:layout_width="wrap_content"
+                android:text="Status"
+                android:gravity="center"
+                android:background="@drawable/rectangle_shape_yellow_rounded_corner_"
+                android:textStyle="bold"
+                android:textSize="@dimen/_8sdp"
+                android:padding="@dimen/_4sdp"
+             android:layout_centerInParent="true"
+                android:textColor="@color/white"
+                android:layout_height="wrap_content"></TextView>
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/action"
+            android:layout_width="0dp"
+            android:layout_weight="1.2"
+
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textSize="@dimen/_8sdp"
+            android:textColor="@color/blue_btn"
+            android:layout_height="match_parent"></TextView>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey"></View>
+</LinearLayout>

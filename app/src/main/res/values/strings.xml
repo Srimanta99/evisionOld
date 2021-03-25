@@ -184,7 +184,6 @@
     <string name="menu_correo">Correo electrónico</string>
 
 
-
     <string name="socialshare">Síguenos</string>
     <string name="contact_us">contactar via app</string>
     <string name="menu_news">Noticias</string>
@@ -290,13 +289,13 @@
     <string name="notificatio_dialog_header">Avísame cuando esto
      producto de nuevo en stock</string>
     <string name="entifyemail">Wprowadź adres e-mail</string>
-    <item type="id" name="zone" />
-    <item type="id" name="dprice" />
+    <item name="zone" type="id" />
+    <item name="dprice" type="id" />
 
     <string name="default_notification_channel_id">evision_channel</string>
     <string name="samsunginstall">Samsung Self Installation</string>
     <string name="branches">Sucursales</string>
     <string name="termforsale">Términos y Condiciones</string>
-<string name="privayforsale">Política de privacidad</string>
+    <string name="privayforsale">Política de privacidad</string>
 
 </resources>

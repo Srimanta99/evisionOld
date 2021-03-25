@@ -174,12 +174,12 @@ class MyQuoteFragment : Fragment() {
                     `is`.close()
 
                     activity!!.runOnUiThread {
-                        Toast.makeText(activity, " A new file is downloaded successfully in your internal storage Evision folder ",
-                                Toast.LENGTH_LONG).show()
+                        //Toast.makeText(activity, " A new file is downloaded successfully in your internal storage Evision folder ",
+                             //   Toast.LENGTH_LONG).show()
                         val authority = activity!!.applicationContext.packageName.toString() + ".fileprovider"
                         //val uriToFile: Uri = FileProvider.getUriForFile(activity!!, authority, outputFile)
                         val uriToFile: Uri =  FileProvider.getUriForFile(Objects.requireNonNull(activity!!),
-                                BuildConfig.APPLICATION_ID + ".provider", file);
+                                BuildConfig.APPLICATION_ID + ".provider", outputFile);
                         val shareIntent = Intent(Intent.ACTION_VIEW)
                         shareIntent.setDataAndType(uriToFile, "application/pdf")
                         shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)

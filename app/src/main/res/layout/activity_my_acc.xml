@@ -94,7 +94,7 @@
             <TextView
                 android:id="@+id/TXT_myquote"
                 android:layout_width="match_parent"
-                android:text="Quotations"
+                android:text="Cotizaciones"
                 android:gravity="center"
                 android:padding="4dp"
                 android:textColor="@android:color/black"
